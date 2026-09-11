@@ -1,6 +1,6 @@
 # Sanskar Rai — Portfolio Website Plan
 
-Status: **PLAN v1.2, 2026-09-11.** Single-page revision plus the deployment route (section 10.1). No code yet. Build starts only on Sanskar's explicit go.
+Status: **PLAN v1.2, 2026-09-11.** Single-page revision plus the deployment route (section 10.1). **Phase 0 complete 2026-09-11**: Vite + React + TypeScript scaffold, repo at github.com/TheSansySasy/portfolio. Next: Phase 1.
 Remaining open items are in section 15.
 
 ---
