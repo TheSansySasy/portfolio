@@ -1,0 +1,74 @@
+:root {
+  --bg: #f5f4f0;
+  --text: #111111;
+  --muted: #5f5f5a;
+  --line: #d9d7d0;
+  --accent-text: #c9450f;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  color-scheme: light dark;
+  font: 17px/1.5 var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a0a0b;
+    --text: #f2f2f0;
+    --muted: #9b9b9b;
+    --line: #262629;
+    --accent-text: #ff8a5b;
+  }
+}
+
+body {
+  margin: 0;
+}
+
+.shell {
+  min-height: 100svh;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.label,
+.handle {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.label {
+  color: var(--muted);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.handle {
+  color: var(--accent-text);
+}
+
+h1 {
+  font-size: clamp(48px, 12vw, 180px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.note {
+  color: var(--muted);
+  max-width: 48ch;
+  margin: 12px 0 0;
+}
