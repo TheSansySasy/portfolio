@@ -4,10 +4,10 @@ import '@fontsource-variable/archivo'
 import '@fontsource-variable/inter'
 import '@fontsource-variable/jetbrains-mono'
 import './styles/globals.css'
-import App from './App.tsx'
+import { StyleguidePage } from './sections/StyleguidePage'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <StyleguidePage />
   </StrictMode>,
 )

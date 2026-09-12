@@ -28,7 +28,8 @@ Remaining open items are in section 15.
 | 17 | Headline | Undecided. Shortlist kept in section 2; decided in Phase 2 with real copy around it |
 | 18 | Repo name | `portfolio`, at github.com/TheSansySasy/portfolio, public |
 | 19 | LinkedIn URL, Credly link | Given later, non-blocking |
-| 20 | Monogram | Claude drafts three SVG directions in Phase 1; Sanskar refines in chat or in Inkscape / Figma |
+| 20 | Monogram | **Modular grid mark**, chosen 2026-09-13. The roundel is reserved for the back of the lanyard badge; the ligature is unused |
+| 21 | Display font | **Archivo** variable, chosen 2026-09-13. Roboto Flex was the alternative and has been removed |
 
 ---
 
