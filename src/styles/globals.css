@@ -1,0 +1,185 @@
+@import 'tailwindcss';
+
+/* ----------------------------------------------------------------------------
+   Design tokens. Hex values are declared once; the theme rules only remap
+   which set is active, so light and dark can never drift apart.
+   Palette source of truth: PLAN.md section 3.2.
+---------------------------------------------------------------------------- */
+:root {
+  /* light set */
+  --l-bg: #f5f4f0;
+  --l-surface: #ffffff;
+  --l-line: #d9d7d0;
+  --l-text: #111111;
+  --l-muted: #5f5f5a;
+  /* Light accents are darker than the brand orange so they clear WCAG AA on
+     paper: text 4.95:1, graphics 3.10:1, near-black on a solid button 5.79:1. */
+  --l-accent: #ea5f18;
+  --l-accent-text: #bd3e0c;
+  --l-glass: rgb(255 255 255 / 0.72);
+  --l-noise: 0.03;
+
+  /* dark set */
+  --d-bg: #0a0a0b;
+  --d-surface: #121214;
+  --d-line: #262629;
+  --d-text: #f2f2f0;
+  --d-muted: #9b9b9b;
+  /* The brand orange is legible on near-black, so dark uses it unchanged. */
+  --d-accent: #ff6f37;
+  --d-accent-text: #ff8a5b;
+  --d-glass: rgb(18 18 20 / 0.64);
+  --d-noise: 0.06;
+
+  /* theme-independent */
+  --brand: #ff6f37;
+  --thermal-1: #1b1f8a;
+  --thermal-2: #7a1fa2;
+  --thermal-3: #c2189a;
+  --thermal-4: #ff6f37;
+  --thermal-5: #ffd166;
+
+  /* active mapping: light by default */
+  --bg: var(--l-bg);
+  --surface: var(--l-surface);
+  --line: var(--l-line);
+  --text: var(--l-text);
+  --muted: var(--l-muted);
+  --accent: var(--l-accent);
+  --accent-text: var(--l-accent-text);
+  --glass: var(--l-glass);
+  --noise: var(--l-noise);
+  color-scheme: light;
+}
+
+/* System preference, unless the visitor pinned light */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: var(--d-bg);
+    --surface: var(--d-surface);
+    --line: var(--d-line);
+    --text: var(--d-text);
+    --muted: var(--d-muted);
+    --accent: var(--d-accent);
+    --accent-text: var(--d-accent-text);
+    --glass: var(--d-glass);
+    --noise: var(--d-noise);
+    color-scheme: dark;
+  }
+}
+
+/* An explicit choice always wins */
+:root[data-theme='dark'] {
+  --bg: var(--d-bg);
+  --surface: var(--d-surface);
+  --line: var(--d-line);
+  --text: var(--d-text);
+  --muted: var(--d-muted);
+  --accent: var(--d-accent);
+  --accent-text: var(--d-accent-text);
+  --glass: var(--d-glass);
+  --noise: var(--d-noise);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-glass: var(--glass);
+  --color-thermal-1: var(--thermal-1);
+  --color-thermal-2: var(--thermal-2);
+  --color-thermal-3: var(--thermal-3);
+  --color-thermal-4: var(--thermal-4);
+  --color-thermal-5: var(--thermal-5);
+
+  --font-display: 'Archivo Variable', Archivo, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', Inter, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --spacing-gutter: 1.5rem;
+  --container-site: 90rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #0a0a0b;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    text-wrap: balance;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Mono label used for section indices, tags and the handle */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* Display sizes. The hero is capped so the name never overflows on mobile. */
+  .type-hero {
+    font-size: clamp(2.75rem, 13vw, 11rem);
+    text-transform: uppercase;
+  }
+
+  .type-section {
+    font-size: clamp(2rem, 4.5vw, 4.5rem);
+  }
+
+  .type-lede {
+    font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+    line-height: 1.45;
+    text-wrap: pretty;
+  }
+}

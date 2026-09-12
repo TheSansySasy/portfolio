@@ -6,7 +6,7 @@ Working notes for this repo: conventions, environment quirks, and deployment fac
 
 Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), covering three pillars: Dynamics 365 F&O, Python and AI pipelines, Azure and operations. Live domain will be **sansysasy.com**. Currently at `https://portfolio.rai-sanskar304.workers.dev` with `noindex` set until launch.
 
-**Phase status:** Phase 0 complete (scaffold, repo, deploy). Phase 1 (foundation) not started.
+**Phase status:** Phase 0 complete (scaffold, repo, deploy). Phase 1 (foundation) built on branch `phase-1-foundation`: tokens for both themes, fonts, theme toggle, layout shell, sheet overlay with hash deep links, three monogram drafts, styleguide, CI. Awaiting Sanskar's monogram and display-font picks.
 
 ## Commands
 
@@ -17,6 +17,20 @@ pnpm lint                         # oxlint
 pnpm typecheck                    # tsc -b
 pnpm exec wrangler deploy --dry-run   # validate wrangler.jsonc against dist/
 ```
+
+Two pages: `/` is the site, `/styleguide.html` is the unlinked design review page (tokens, type scale, monogram options, headline candidates, components). Both are Vite entries declared in `vite.config.ts`.
+
+## Design system facts
+
+- Tokens live in `src/styles/globals.css`. Every hex is declared **once** in a light set (`--l-*`) and a dark set (`--d-*`); the theme rules only remap which set is active, so the two themes cannot drift. Tailwind sees them through `@theme inline`, which is what makes `bg-bg`, `text-muted`, `border-line` and `font-display` work.
+- **The accent is per-theme, deliberately.** The brand orange `#ff6f37` fails WCAG AA on the light paper background (2.52:1), so light uses `#ea5f18` for graphics and `#bd3e0c` for accent text. Measured ratios: dark 17.65 body / 7.12 muted / 8.52 accent text; light 17.16 / 5.83 / 4.95, graphics 3.10, near-black on a solid accent button 5.79. Re-measure if any of these change.
+- Theme state: `data-theme` on `<html>`, `system` removes the attribute so the media query applies. The inline script in `index.html` and `styleguide.html` applies the stored choice before first paint and must stay in sync with `applyTheme()` in `src/lib/theme.ts`.
+- Fonts come from `@fontsource-variable/*` imported in the entry files. Roboto Flex is imported **only** by the styleguide, for the display-font comparison; drop the package once the font is chosen.
+
+## Gotchas found the hard way
+
+- **`backdrop-filter` creates a containing block for fixed positioning.** The nav uses `backdrop-blur`, so an overlay rendered inside it was clipped to the 64px nav height while every DOM assertion still passed. `Sheet` therefore portals into `document.body`. Check overlays visually, not only through the DOM.
+- The Bash tool mangles long multi-line heredocs; write source files with the Write tool instead.
 
 ## Environment quirks (Windows)
 
