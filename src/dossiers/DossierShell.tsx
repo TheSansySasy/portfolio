@@ -50,14 +50,14 @@ export function DossierList({ items }: { items: string[] }) {
 
 export function DossierMetrics({ items }: { items: { value: string; label: string }[] }) {
   return (
-    <dl className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3">
       {items.map((metric) => (
-        <div key={metric.label} className="bg-bg p-5">
-          <dd className="font-display text-3xl leading-none font-extrabold">{metric.value}</dd>
-          <dt className="mono-label mt-2 text-muted">{metric.label}</dt>
-        </div>
+        <li key={metric.label} className="bg-bg p-5">
+          <p className="font-display text-3xl leading-none font-extrabold">{metric.value}</p>
+          <p className="mono-label mt-2 text-muted">{metric.label}</p>
+        </li>
       ))}
-    </dl>
+    </ul>
   )
 }
 
