@@ -1,10 +1,17 @@
-import { HEADLINES, ROLES, SITE } from '../content/data/site'
+import { HEADLINE, ROLES, SITE, SUBHEAD } from '../content/data/site'
 import { ButtonLink } from '../ui/Button'
 import { Container } from '../ui/Container'
+import { ResumeLinks } from '../ui/ResumeLinks'
+
+const HIGHLIGHTS = [
+  { value: '26,000+', label: 'documents processed' },
+  { value: '99.9%', label: 'uptime held' },
+  { value: 'MB-310', label: 'Microsoft certified' },
+]
 
 /**
- * Phase 1 hero: the real type scale and layout, no effects yet.
- * Phase 3 swaps the name for Text Pressure and the role line for Decrypted Text.
+ * Phase 3 swaps the name for Text Pressure and the role line for Decrypted
+ * Text. Everything here must read correctly with no animation at all.
  */
 export function Hero() {
   return (
@@ -24,27 +31,25 @@ export function Hero() {
 
         <p className="mono-label mt-6 text-accent-text">{ROLES.join('  ·  ')}</p>
 
-        <p className="type-lede mt-8 max-w-2xl">{HEADLINES[0]}</p>
-        <p className="mono-label mt-3 text-muted">
-          Headline is provisional. Five candidates live in the styleguide.
+        <p className="type-lede mt-8 max-w-3xl font-display text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold tracking-[-0.02em]">
+          {HEADLINE}
         </p>
+        <p className="mt-5 max-w-2xl text-muted">{SUBHEAD}</p>
 
         <div className="mt-10 flex flex-wrap items-center gap-3">
           <ButtonLink href="#work" variant="solid">
             See the work
           </ButtonLink>
-          <ButtonLink href="#contact">Get in touch</ButtonLink>
+          <ResumeLinks />
         </div>
 
         <dl className="mt-16 grid grid-cols-1 gap-6 border-t border-line pt-8 sm:grid-cols-3">
-          {[
-            ['26,000+', 'documents processed'],
-            ['99.9%', 'uptime maintained'],
-            ['MB-310', 'Microsoft certified'],
-          ].map(([value, label]) => (
-            <div key={label}>
-              <dt className="mono-label text-muted">{label}</dt>
-              <dd className="mt-2 font-display text-3xl font-extrabold md:text-4xl">{value}</dd>
+          {HIGHLIGHTS.map((item) => (
+            <div key={item.label}>
+              <dt className="mono-label text-muted">{item.label}</dt>
+              <dd className="mt-2 font-display text-3xl font-extrabold md:text-4xl">
+                {item.value}
+              </dd>
             </div>
           ))}
         </dl>

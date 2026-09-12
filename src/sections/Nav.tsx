@@ -48,7 +48,7 @@ export function Nav() {
           </a>
           <ThemeToggle />
           <ButtonLink href="#contact" className="hidden sm:inline-flex">
-            Get in touch
+            Resume
           </ButtonLink>
           <button
             type="button"

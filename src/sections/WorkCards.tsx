@@ -20,8 +20,11 @@ export function WorkCards() {
               {item.title}
             </span>
             <span className="text-muted">{item.outcome}</span>
-            <span className="mono-label mt-auto pt-4 text-accent-text opacity-0 transition-opacity group-hover:opacity-100">
-              Open dossier
+            <span className="mono-label mt-auto flex w-full items-center justify-between pt-4">
+              <span className="text-accent-text opacity-0 transition-opacity group-hover:opacity-100">
+                Open dossier
+              </span>
+              <span className="text-muted">{item.written ? 'Written' : 'Outline'}</span>
             </span>
           </button>
         </li>
