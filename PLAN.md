@@ -1,6 +1,6 @@
 # Sanskar Rai — Portfolio Website Plan
 
-Status: **PLAN v1.2, 2026-09-11.** Single-page revision plus the deployment route (section 10.1). **Phase 0 complete 2026-09-11**: Vite + React + TypeScript scaffold, repo at github.com/TheSansySasy/portfolio. Next: Phase 1.
+Status: **PLAN v1.3, 2026-09-12.** Single-page site on Cloudflare Workers (section 10). **Phase 0 complete 2026-09-11**: Vite + React + TypeScript scaffold, repo at github.com/TheSansySasy/portfolio. **Deployed 2026-09-12** to Cloudflare Workers at portfolio.rai-sanskar304.workers.dev. Next: Phase 1.
 Remaining open items are in section 15.
 
 ---
@@ -14,7 +14,7 @@ Remaining open items are in section 15.
 | 3 | Confidentiality | No client names, no screenshots. Numbers are fine. Employers (EBT, Runtime Solutions, Tectura) may be named |
 | 4 | Showcase repos | Yes, three sanitized public repos |
 | 5 | Badge image | No photo. **Monogram** |
-| 6 | Domain / hosting | **sansysasy.com**, registrar **GoDaddy**. Canonical URL `https://sansysasy.com`. Hosting confirmed at launch |
+| 6 | Domain / hosting | **sansysasy.com**, registrar **GoDaddy**. Canonical URL `https://sansysasy.com`. Hosting: **Cloudflare Workers** (static assets), live 2026-09-12 |
 | 7 | Particle text | **Custom canvas build.** Nothing purchased |
 | 8 | Evil Eye | **Dropped.** Was only an idea. Operations section uses a failover simulation instead |
 | 9 | Blog | **Not now.** A blog later would live on a subdomain |
@@ -248,54 +248,69 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 
 ---
 
-## 10. Hosting, domain, services (decision at Phase 6)
+## 10. Hosting, domain, services
 
-| Option | Cost | Pros | Cons |
-|---|---|---|---|
-| **Cloudflare Pages** | Free | Static hosting on the edge, generous limits, same place as DNS if DNS moves there | Nothing significant for a static site |
-| **Vercel Hobby** | Free | Zero ops, preview URL per PR | Hobby plan is for non-commercial use; fine for a personal portfolio |
-| **Nginx on the Ubuntu VPS** | Existing | Full control, on-brand, the `api/` service lives there anyway | You own uptime and patching; deploys via GitHub Actions over SSH |
+**Decided 2026-09-12: Cloudflare Workers with static assets.** The Cloudflare dashboard now offers only the Workers flow when creating an application, so the site is a static-only Worker rather than a Pages project. Live since 2026-09-12 at `https://portfolio.rai-sanskar304.workers.dev`.
 
-Recommendation: **Cloudflare Pages for the site, the VPS behind the Cloudflare proxy for the API**, registrar staying at GoDaddy. Vercel is the alternative if the nameservers must stay at GoDaddy. Confirmed at Phase 6; static output means the choice is reversible in minutes.
+| Option | Status | Notes |
+|---|---|---|
+| **Cloudflare Workers (static assets)** | **In use** | Free, edge-served, git-connected builds, preview URL per version and branch, same account as DNS, Turnstile and Email Routing |
+| Cloudflare Pages | Not available | The create-application flow no longer exposes it; Pages still runs for existing projects |
+| Vercel Hobby | Fallback | Only needed if the nameservers must stay at GoDaddy; Hobby terms are non-commercial |
+| Nginx on the Ubuntu VPS | Fallback | Full control, on-brand, the `api/` service lives there anyway; no preview URLs |
 
-- **Domain.** `sansysasy.com`, registrar GoDaddy. The domain is the handle, so the URL itself carries SansySasy; the title tag and JSON-LD still lead with "Sanskar Rai". Hostnames: `sansysasy.com` (site), `www.sansysasy.com` (redirects to apex), `api.sansysasy.com` (API). Needed at launch: GoDaddy access to change nameservers or add records. No DNS change before Phase 6.
+- **Domain.** `sansysasy.com`, registrar GoDaddy. The domain is the handle, so the URL itself carries SansySasy; the title tag and JSON-LD still lead with "Sanskar Rai". Hostnames: `sansysasy.com` (site), `www.sansysasy.com` (redirects to apex), `api.sansysasy.com` (API). No DNS change before Phase 6.
+- **Nameservers.** A Worker custom domain requires the zone to live in the same Cloudflare account, so at Phase 6 the nameservers move to Cloudflare while GoDaddy stays registrar. Keeping GoDaddy DNS would mean switching the site to Vercel or the VPS instead.
 - **Email on the domain.** `hello@sansysasy.com` via Cloudflare Email Routing, forwarding to the existing mailbox, free. Used in the Contact section and as the Resend sending domain (its DNS records are added at launch).
 - **Contact form.** Phase 2: Web3Forms. Phase 5b onward: the `api/` service with Turnstile.
-- **Analytics.** Privacy-friendly, no cookie banner: Cloudflare Web Analytics, Vercel Analytics, or self-hosted Umami on the VPS. Decide at Phase 6.
+- **Analytics.** Privacy-friendly, no cookie banner: Cloudflare Web Analytics. Worker logs via the `observability` block already enabled in `wrangler.jsonc`.
 
-### 10.1 Deployment route (recommended, confirmed at Phase 6)
+### 10.1 Deployment route (in use)
 
 **Two deployables.**
 | Deployable | Built by | Hosted on | URL |
 |---|---|---|---|
-| Site: `dist/` from `vite build` | Cloudflare Pages build on each commit, mirrored by CI | Cloudflare Pages | apex and `www` |
-| API: `api/` FastAPI | GitHub Actions builds a Docker image, pushes to GHCR | Ubuntu VPS, Nginx reverse proxy, fronted by the Cloudflare proxy | `api.<domain>` |
+| Site: `dist/` from `vite build` | Workers Builds, on every push | Cloudflare Workers, static assets from `wrangler.jsonc` | `portfolio.rai-sanskar304.workers.dev`, later the apex and `www` |
+| API: `api/` FastAPI | GitHub Actions builds a Docker image, pushes to GHCR | Ubuntu VPS, Nginx reverse proxy, fronted by the Cloudflare proxy | `api.sansysasy.com` |
+
+**Cloudflare project settings (as configured).**
+| Setting | Value |
+|---|---|
+| Project / Worker name | `portfolio` (must match `name` in `wrangler.jsonc`) |
+| Production branch | `main` |
+| Build command | `pnpm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Non-production branch deploy command | `npx wrangler versions upload` |
+| Builds for non-production branches | enabled |
+| `PNPM_VERSION` | `12.4.1` — required; the build image ships pnpm 10.11.1, which cannot read a pnpm 12 lockfile |
+| Node version | from `.node-version` (`24`); the build image default is already 24.18 |
+
+**Repo requirements for the remote build.** `wrangler.jsonc` (assets from `./dist`, `not_found_handling: "404-page"`, observability on) · `wrangler` as a devDependency so `npx` resolves it · `allowBuilds` for `esbuild` and `workerd` in `pnpm-workspace.yaml`, without which pnpm 12 fails the install with `ERR_PNPM_IGNORED_BUILDS` · `public/404.html`.
 
 **Environments.**
 - Local: `pnpm dev` on `localhost:5173`; `uvicorn` on `localhost:8000`; the Vite dev proxy maps `/api` to 8000.
-- Preview: every branch and pull request gets `<branch>.<project>.pages.dev`, from Phase 1 onward.
-- Production: merges to `main` deploy to `<project>.pages.dev`, aliased to the custom domain at Phase 6.
+- Preview: non-production branches upload a version and return a preview URL, `<version-or-alias>-portfolio.rai-sanskar304.workers.dev`. Available from Phase 1 onward.
+- Production: merges to `main` deploy the Worker, aliased to the custom domain at Phase 6.
 
 **Flow on every push.**
 1. CI: typecheck, lint, Playwright smoke + axe, `vite build`, Lighthouse CI against `dist/`.
-2. Cloudflare Pages builds the same commit and publishes a preview (branch) or production (`main`).
+2. Workers Builds builds the same commit, then deploys (`main`) or uploads a preview version (any other branch).
 3. If files under `api/**` changed on `main`: build the image, push to GHCR, SSH to the VPS, `docker compose pull && docker compose up -d`, then `GET /health` must pass.
 
 **DNS at Phase 6.**
 - Registrar stays GoDaddy. Nameservers switch to Cloudflare's free plan; the zone lives on Cloudflare.
-- Records: `sansysasy.com` CNAME (flattened) to `<project>.pages.dev`; `www.sansysasy.com` CNAME to the same, with a redirect rule from `www` to the apex; `api.sansysasy.com` A record to the VPS IP, proxied; MX and TXT records for Email Routing; TXT and CNAME records for Resend.
+- `sansysasy.com` and `www.sansysasy.com` are added as custom domains on the Worker, with a redirect rule from `www` to the apex; `api.sansysasy.com` is an A record to the VPS IP, proxied; MX and TXT records for Email Routing; TXT and CNAME records for Resend.
 - TLS: Cloudflare at the edge; on the VPS, Certbot or a Cloudflare origin certificate. A rate-limiting rule on `api.sansysasy.com/demo/*`; Turnstile from the same dashboard.
-- Alternative without touching nameservers: Vercel for the site with A and CNAME records at GoDaddy; Nginx `limit_req` for API rate limiting.
 
-**Before Phase 6.** The API runs during Phase 5b under an existing VPS hostname or the raw IP with Certbot; the site lives on `pages.dev`. No DNS change until launch.
+**Before Phase 6.** The API runs during Phase 5b under an existing VPS hostname or the raw IP with Certbot; the site stays on `workers.dev` with `noindex` set. No DNS change until launch.
 
 **Secrets.** LLM API key with a spend cap, Resend key, Turnstile secret: an env file on the VPS, never in the repo. Turnstile site key and the API base URL: public Vite build-time env.
 
-**Rollback.** Pages keeps every deployment; one click restores the previous one. API: redeploy the previous image tag.
+**Rollback.** Workers keeps every version: `wrangler rollback`, or promote an earlier version from the dashboard. API: redeploy the previous image tag.
 
-**Monitoring.** Cloudflare Web Analytics for the site; an uptime check on `/health` from Sanskar's own Zabbix or a free external monitor; a spend alert on the LLM key.
+**Monitoring.** Cloudflare Web Analytics for the site; Worker observability logs; an uptime check on `/health` from Sanskar's own Zabbix or a free external monitor; a spend alert on the LLM key.
 
-**Launch checklist.** Remove the pre-launch `noindex` meta from `index.html`; DNS propagated; HTTPS on apex, `www` and `api`; `www` redirect; 404 served for unknown paths; robots and sitemap live; Open Graph preview verified with the LinkedIn Post Inspector; Lighthouse on production in both themes; contact form end to end; demo answers within the cap; resume PDFs download; GitHub profile and LinkedIn updated with the URL.
+**Launch checklist.** Remove the pre-launch `noindex` meta from `index.html`; nameservers moved and propagated; custom domains attached to the Worker; HTTPS on apex, `www` and `api`; `www` redirect; 404 served for unknown paths; robots and sitemap live; Open Graph preview verified with the LinkedIn Post Inspector; Lighthouse on production in both themes; contact form end to end; demo answers within the cap; resume PDFs download; GitHub profile and LinkedIn updated with the URL.
 
 ---
 
