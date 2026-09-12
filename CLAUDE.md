@@ -6,7 +6,9 @@ Working notes for this repo: conventions, environment quirks, and deployment fac
 
 Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), covering three pillars: Dynamics 365 F&O, Python and AI pipelines, Azure and operations. Live domain will be **sansysasy.com**. Currently at `https://portfolio.rai-sanskar304.workers.dev` with `noindex` set until launch.
 
-**Phase status:** Phase 0 and Phase 1 complete and on `main` (scaffold, repo, Cloudflare deploy, tokens, themes, shell, sheet overlay, styleguide, CI). Phase 2 (content) built on branch `phase-2-content`: real copy in every section, two written dossiers with SVG diagrams and annotated code, resume downloads, SEO and structured data. Next: Phase 3, the light effects.
+**Phase status:** Phases 0, 1 and 2 are complete and merged to `main`, so production serves the written site. **Phase 3 is not started and must not be started without Sanskar saying so.**
+
+Before Phase 3 begins, Sanskar is supplying: his LinkedIn URL, the Credly link for MB-310, and a target date for MB-500. He will also review the Phase 2 copy (About, experience bullets, both dossiers) and may correct facts or tone. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
 
 ## Commands
 
