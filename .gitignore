@@ -36,3 +36,6 @@ coverage
 playwright-report
 test-results
 .lighthouseci
+
+# Wrangler / Cloudflare local state
+.wrangler
