@@ -29,15 +29,11 @@ const TOKENS: { name: string; varName: string; note: string }[] = [
 
 const THERMAL = ['--thermal-1', '--thermal-2', '--thermal-3', '--thermal-4', '--thermal-5']
 
+/** Chosen 2026-09-13: the modular grid mark, with the roundel kept for the badge back. */
 const MONOGRAMS: { variant: MonogramVariant; label: string; note: string }[] = [
-  { variant: 'ligature', label: 'A. Ligature', note: 'Archivo letterforms, tightly set' },
-  { variant: 'grid', label: 'B. Modular grid', note: 'Built from 5x5 blocks, reads as systems' },
-  { variant: 'roundel', label: 'C. Roundel', note: 'Doubles as the back of the lanyard badge' },
-]
-
-const DISPLAY_FONTS = [
-  { label: 'A. Archivo', stack: "'Archivo Variable', sans-serif" },
-  { label: 'B. Roboto Flex', stack: "'Roboto Flex Variable', sans-serif" },
+  { variant: 'grid', label: 'Modular grid · chosen', note: 'Reads as systems, holds up at nav size' },
+  { variant: 'roundel', label: 'Roundel · kept', note: 'Reserved for the back of the lanyard badge' },
+  { variant: 'ligature', label: 'Ligature · not used', note: 'Muddy once it shrinks into the nav' },
 ]
 
 export function StyleguidePage() {
@@ -56,7 +52,7 @@ export function StyleguidePage() {
       </header>
 
       <Container>
-        <Block index="01" title="Monogram, pick one">
+        <Block index="01" title="Monogram">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
             {MONOGRAMS.map(({ variant, label, note }) => (
               <figure key={variant} className="flex flex-col gap-4">
@@ -80,27 +76,20 @@ export function StyleguidePage() {
           </div>
         </Block>
 
-        <Block index="02" title="Display font, pick one">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {DISPLAY_FONTS.map(({ label, stack }) => (
-              <div key={label} className="rounded-lg border border-line p-6">
-                <p className="mono-label text-accent-text">{label}</p>
-                <p
-                  className="mt-4 text-[clamp(2rem,6vw,4rem)] leading-[0.95] font-extrabold tracking-[-0.03em] uppercase"
-                  style={{ fontFamily: stack }}
-                >
-                  Sanskar Rai
-                </p>
-                <p className="mt-4 text-2xl font-semibold" style={{ fontFamily: stack }}>
-                  I keep production up. 26,000 documents, 99.9% uptime.
-                </p>
-              </div>
-            ))}
+        <Block index="02" title="Display font">
+          <div className="rounded-lg border border-line p-6">
+            <p className="mono-label text-accent-text">Archivo · chosen</p>
+            <p className="mt-4 font-display text-[clamp(2rem,6vw,4rem)] leading-[0.95] font-extrabold tracking-[-0.03em] uppercase">
+              Sanskar Rai
+            </p>
+            <p className="mt-4 font-display text-2xl font-semibold">
+              I keep production up. 26,000 documents, 99.9% uptime.
+            </p>
+            <p className="mt-6 text-muted">
+              Variable, with the width and weight axes the hero effect needs in Phase 3. Roboto Flex
+              was the alternative and has been dropped.
+            </p>
           </div>
-          <p className="mt-6 text-muted">
-            Both carry the width and weight axes the hero effect needs in Phase 3. Archivo is the
-            current default.
-          </p>
         </Block>
 
         <Block index="03" title="Type scale">

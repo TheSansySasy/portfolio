@@ -25,7 +25,7 @@ Two pages: `/` is the site, `/styleguide.html` is the unlinked design review pag
 - Tokens live in `src/styles/globals.css`. Every hex is declared **once** in a light set (`--l-*`) and a dark set (`--d-*`); the theme rules only remap which set is active, so the two themes cannot drift. Tailwind sees them through `@theme inline`, which is what makes `bg-bg`, `text-muted`, `border-line` and `font-display` work.
 - **The accent is per-theme, deliberately.** The brand orange `#ff6f37` fails WCAG AA on the light paper background (2.52:1), so light uses `#ea5f18` for graphics and `#bd3e0c` for accent text. Measured ratios: dark 17.65 body / 7.12 muted / 8.52 accent text; light 17.16 / 5.83 / 4.95, graphics 3.10, near-black on a solid accent button 5.79. Re-measure if any of these change.
 - Theme state: `data-theme` on `<html>`, `system` removes the attribute so the media query applies. The inline script in `index.html` and `styleguide.html` applies the stored choice before first paint and must stay in sync with `applyTheme()` in `src/lib/theme.ts`.
-- Fonts come from `@fontsource-variable/*` imported in the entry files. Roboto Flex is imported **only** by the styleguide, for the display-font comparison; drop the package once the font is chosen.
+- Fonts come from `@fontsource-variable/*` imported in the entry files. **Decided 2026-09-13:** display font is **Archivo** (Roboto Flex was the alternative and has been removed), and the mark is the **modular grid monogram**; the roundel stays reserved for the back of the lanyard badge, and the ligature is unused.
 
 ## Gotchas found the hard way
 
