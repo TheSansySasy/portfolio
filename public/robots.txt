@@ -1,0 +1,6 @@
+# Pre-launch: the whole site is closed to crawlers until the domain goes live.
+# At Phase 6, replace the Disallow with "Allow: /" and keep the styleguide closed.
+User-agent: *
+Disallow: /
+
+Sitemap: https://sansysasy.com/sitemap.xml

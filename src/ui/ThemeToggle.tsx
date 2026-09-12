@@ -14,7 +14,8 @@ const GLYPH: Record<Theme, string> = {
 
 export function ThemeToggle() {
   const { theme, cycle } = useTheme()
-  const label = `Theme: ${theme}. Switch to ${NEXT[theme]}.`
+  /** Must contain the visible word, or the accessible name mismatches the label. */
+  const label = `${GLYPH[theme]} theme, switch to ${NEXT[theme]}`
 
   return (
     <button

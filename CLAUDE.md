@@ -6,7 +6,7 @@ Working notes for this repo: conventions, environment quirks, and deployment fac
 
 Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), covering three pillars: Dynamics 365 F&O, Python and AI pipelines, Azure and operations. Live domain will be **sansysasy.com**. Currently at `https://portfolio.rai-sanskar304.workers.dev` with `noindex` set until launch.
 
-**Phase status:** Phase 0 complete (scaffold, repo, deploy). Phase 1 (foundation) built on branch `phase-1-foundation`: tokens for both themes, fonts, theme toggle, layout shell, sheet overlay with hash deep links, three monogram drafts, styleguide, CI. Awaiting Sanskar's monogram and display-font picks.
+**Phase status:** Phase 0 and Phase 1 complete and on `main` (scaffold, repo, Cloudflare deploy, tokens, themes, shell, sheet overlay, styleguide, CI). Phase 2 (content) built on branch `phase-2-content`: real copy in every section, two written dossiers with SVG diagrams and annotated code, resume downloads, SEO and structured data. Next: Phase 3, the light effects.
 
 ## Commands
 
@@ -18,7 +18,19 @@ pnpm typecheck                    # tsc -b
 pnpm exec wrangler deploy --dry-run   # validate wrangler.jsonc against dist/
 ```
 
-Two pages: `/` is the site, `/styleguide.html` is the unlinked design review page (tokens, type scale, monogram options, headline candidates, components). Both are Vite entries declared in `vite.config.ts`.
+Two pages: `/` is the site, `/styleguide.html` is the unlinked design review page (tokens, type scale, monogram options, headline candidates, components). Both are Vite entries declared in `vite.config.ts`. On the deployed Worker the styleguide is served at `/styleguide`, since static assets drop the `.html`.
+
+**Measuring the site.** Build first, then serve `dist/` and audit it. Chrome is at `C:\Program Files\Google\Chrome\Application\chrome.exe`; set `CHROME_PATH` to it.
+
+```bash
+pnpm build
+node node_modules/vite/bin/vite.js preview --port 4173 --strictPort
+pnpm dlx lighthouse@latest http://localhost:4173/ --preset=desktop --chrome-flags="--headless=new"
+```
+
+Last measured on the Phase 2 build: desktop 100 / 100 / 100, mobile performance 95, accessibility 100, best practices 100, LCP 2.2s, CLS 0, TBT 120ms. **SEO scores 66 on purpose**, because the page carries a pre-launch `noindex` and `robots.txt` disallows everything; both are removed at launch. Lighthouse exits non-zero on Windows from a temp-directory cleanup error even when the run succeeded, so read the JSON rather than the exit code.
+
+Two accessibility traps already hit and fixed: a `<dl>` may not contain `<p>` (use `<ul>` for figure grids), and a button's `aria-label` must contain its visible text or the accessible name mismatches.
 
 ## Design system facts
 
