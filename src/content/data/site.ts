@@ -10,11 +10,9 @@ export const SITE = {
   timezone: 'UTC+5:30',
   github: 'https://github.com/TheSansySasy',
   repo: 'https://github.com/TheSansySasy/portfolio',
-  /** Public on the resumes already. Replaced by hello@sansysasy.com at launch. */
+  /** Public on the resumes already. Swaps to an address on the domain once one exists. */
   email: 'sanskarrai@hotmail.com',
-  // Added once Sanskar sends the links.
-  linkedin: null as string | null,
-  credly: null as string | null,
+  linkedin: 'https://www.linkedin.com/in/thesanskarrai/',
 } as const
 
 export const RESUMES = [

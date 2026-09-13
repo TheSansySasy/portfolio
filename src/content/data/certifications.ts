@@ -3,7 +3,7 @@ export type Certification = {
   name: string
   status: 'earned' | 'in progress'
   detail: string
-  /** Credly badge URL, added once Sanskar sends it. */
+  /** Microsoft Learn credential share link, for the ones already earned. */
   url?: string
 }
 
@@ -13,11 +13,13 @@ export const CERTIFICATIONS: Certification[] = [
     name: 'Dynamics 365 Finance Functional Consultant Associate',
     status: 'earned',
     detail: 'Microsoft Certified. General ledger, payables, receivables, fixed assets, budgeting.',
+    url: 'https://learn.microsoft.com/api/credentials/share/en-us/SansySasy/13FD34AB8F098579?sharingId=9C4D67301DF784',
   },
   {
     code: 'MB-500',
     name: 'Dynamics 365 Finance and Operations Apps Developer Associate',
     status: 'in progress',
-    detail: 'Studying alongside hands-on X++ extension work.',
+    detail:
+      'Targeting November 2026, studying alongside hands-on X++ extension work: chain of command, event handlers, data entities and set-based operations.',
   },
 ]
