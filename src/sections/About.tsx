@@ -22,7 +22,7 @@ function Badge() {
         </p>
         <p className="mono-label mt-4 text-accent-text">@{SITE.handle}</p>
         <div className="mt-6 border-t border-line pt-4">
-          <p className="mono-label text-muted">D365 F&O · Python · Azure</p>
+          <p className="mono-label text-muted">Python · Cloud · D365 integration</p>
           <p className="mono-label mt-2 text-muted">MB-310 certified</p>
         </div>
       </div>

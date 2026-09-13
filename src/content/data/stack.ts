@@ -15,10 +15,22 @@ export const STACK: StackGroup[] = [
     group: 'Dynamics 365',
     lens: 'D365',
     items: [
-      { name: 'D365 F&O', note: 'General ledger, payables, receivables, fixed assets, budgeting' },
-      { name: 'X++', note: 'Extensions, chain of command, event handlers, set-based operations' },
-      { name: 'Business Central', note: 'OData and REST integration, OAuth2 and NTLM' },
-      { name: 'Power Platform Admin', note: 'Environment provisioning, feature management, Copilot enablement' },
+      {
+        name: 'Business Central',
+        note: 'In production: per-client connectors, OData and REST, OAuth2 and NTLM',
+      },
+      {
+        name: 'D365 F&O (functional)',
+        note: 'MB-310 certified: general ledger, payables, receivables, fixed assets, budgeting',
+      },
+      {
+        name: 'X++ (self-study)',
+        note: 'Extensions, chain of command, event handlers, set-based operations',
+      },
+      {
+        name: 'Power Platform Admin',
+        note: 'Environment provisioning, feature management, Copilot enablement',
+      },
       { name: 'Lifecycle Services', note: 'Environment administration and deployment' },
     ],
   },
@@ -65,6 +77,8 @@ export const STACK: StackGroup[] = [
       { name: 'Azure SQL', note: 'Managed SQL after migrating off GCP' },
       { name: 'Virtual Network', note: 'Subnets, load balancers, VPN gateway' },
       { name: 'Cosmos DB', note: 'Migration target for MongoDB workloads' },
+      { name: 'AWS', note: 'EC2 and S3, alongside the Azure work' },
+      { name: 'GCP', note: 'The platform I migrated databases off, to Azure' },
       { name: 'GitHub Actions', note: 'Pipelines that cut deploy time by 60 percent' },
       { name: 'Docker', note: 'Containerised services and local parity' },
       { name: 'Terraform', note: 'Infrastructure as code' },
