@@ -1,6 +1,6 @@
 # Sanskar Rai — Portfolio Website Plan
 
-Status: **PLAN v1.4, 2026-09-15.** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged and live at portfolio.rai-sanskar304.workers.dev, together with the positioning correction of 2026-09-14 (decision 22). **Phase 3 (effects) is built and verified on `phase-3-effects`, awaiting merge**; section 4 records what was built and what was deliberately left out, and section 9 the measured budgets.
+Status: **PLAN v1.4, 2026-09-15.** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged and live at portfolio.rai-sanskar304.workers.dev, together with the positioning correction of 2026-09-14 (decision 22). **Phase 3 (effects) merged 2026-09-16 (PR #4)**; section 4 records what was built and what was deliberately left out, and section 9 the measured budgets. Phase 4 waits for Sanskar's go.
 Remaining open items are in section 15.
 
 ---
