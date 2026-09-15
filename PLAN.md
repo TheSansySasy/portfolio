@@ -1,6 +1,6 @@
 # Sanskar Rai — Portfolio Website Plan
 
-Status: **PLAN v1.4, 2026-09-15.** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged and live at portfolio.rai-sanskar304.workers.dev, together with the positioning correction of 2026-09-14 (decision 22). **Phase 3 (effects) is in progress on `phase-3-effects`**; section 4 records what was actually built and what was deliberately left out.
+Status: **PLAN v1.4, 2026-09-15.** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged and live at portfolio.rai-sanskar304.workers.dev, together with the positioning correction of 2026-09-14 (decision 22). **Phase 3 (effects) is built and verified on `phase-3-effects`, awaiting merge**; section 4 records what was built and what was deliberately left out, and section 9 the measured budgets.
 Remaining open items are in section 15.
 
 ---
@@ -242,6 +242,8 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 ## 9. Performance, accessibility, SEO, testing
 
 **Budgets.** Initial JS under 200 KB gzipped before lazy effects · LCP under 2.5 s on mobile · CLS under 0.1 · Lighthouse mobile: performance at least 90, accessibility, SEO and best practices at least 95, in both themes.
+
+**Measured after Phase 3 (2026-09-15)**, as the median of five mobile Lighthouse runs alternated with a same-day build of `main`: performance 93 against Phase 2's 90, LCP 2.4 s against 2.2 s, TBT 182 ms against 274 ms, CLS 0.001 against 0.051, accessibility and best practices 100; desktop 100. Initial JavaScript is about 95 KB gzipped. SEO stays at 66 until the pre-launch `noindex` comes off in Phase 6. The effects first cost mobile about 15 points; three measured changes recovered it: `content-visibility` on below-the-fold sections, loading the 88 KB width-axis font only where the name animates, and mounting sections after the hero in a React transition.
 
 **Effects discipline.** Lazy import; mount on intersection; pause off-screen; DPR cap 2; Lanyard desktop and pointer-fine only; reduced motion switches every effect to its static fallback; fonts subset and preloaded; media clips lazy-loaded with posters.
 

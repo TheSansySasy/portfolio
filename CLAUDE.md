@@ -8,7 +8,7 @@ Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), a Python engin
 
 **Positioning rule (corrected 2026-09-14): never describe him as a D365 F&O consultant.** Tectura was functional training that earned MB-310; X++ and the thirteen extension modules are self-study; MB-500 is targeted for November 2026. The Copilot rollout was a real engagement. The role line is `Python Engineer · Cloud & DevOps · Dynamics 365 Integration`.
 
-**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. **Phase 3 (effects) was authorised on 2026-09-15 and is in progress on `phase-3-effects`.** LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
+**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. **Phase 3 (effects) was authorised on 2026-09-15 and is built and verified on `phase-3-effects`, awaiting review and merge.** LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
 
 ## Commands
 
@@ -30,7 +30,9 @@ node node_modules/vite/bin/vite.js preview --port 4173 --strictPort
 pnpm dlx lighthouse@latest http://localhost:4173/ --preset=desktop --chrome-flags="--headless=new"
 ```
 
-Last measured on the Phase 2 build: desktop 100 / 100 / 100, mobile performance 95, accessibility 100, best practices 100, LCP 2.2s, CLS 0, TBT 120ms. **SEO scores 66 on purpose**, because the page carries a pre-launch `noindex` and `robots.txt` disallows everything; both are removed at launch. Lighthouse exits non-zero on Windows from a temp-directory cleanup error even when the run succeeded, so read the JSON rather than the exit code.
+Last measured on the Phase 3 build, 2026-09-15, as the median of five mobile runs alternated with a same-day build of `main`: mobile performance 93 (range 92–98) against Phase 2's 90, LCP 2.4s against 2.2s, TBT 182ms against 274ms, CLS 0.001 against 0.051; accessibility and best practices 100; desktop 100 / 100 / 100 with LCP 0.6s. Initial JavaScript is about 95 KB gzipped, and the sphere is a separate 9 KB chunk. **SEO scores 66 on purpose**, because the page carries a pre-launch `noindex` and `robots.txt` disallows everything; both are removed at launch. Lighthouse exits non-zero on Windows from a temp-directory cleanup error even when the run succeeded, so read the JSON rather than the exit code.
+
+**Verifying effects.** With the preview server running, `node scripts/verify-effects.mjs` drives headless Chrome and checks every effect: the hero's fit at rest and pressed, reveals, the sphere and a drag, count-ups, magnet lines, dossier scroll isolation, in-page and deep links, the light theme, reduced motion and a touch phone, plus console errors, with screenshots saved to disk. Use it rather than the Browser pane for anything animated.
 
 Two accessibility traps already hit and fixed: a `<dl>` may not contain `<p>` (use `<ul>` for figure grids), and a button's `aria-label` must contain its visible text or the accessible name mismatches.
 
@@ -63,6 +65,8 @@ React Bits sources are **MIT + Commons Clause**: free to use and modify inside t
 
 Every effect is static under `prefers-reduced-motion`, and content must still read correctly with every effect removed. Reveals hide content only after `main.tsx` adds `reveal-ready` to `<html>`.
 
+**The initial render is split.** `App.tsx` renders the nav and hero immediately and mounts every other section in a React transition, which renders in small interruptible slices; that removed the largest long task on mobile. A URL that arrives with a hash renders everything at once and then scrolls to the section explicitly, because React's scheduled first render finishes after the browser's own anchor scroll has given up. The nav's scroll-spy waits for the sections via `useActiveSection(ids, enabled)`.
+
 **Fonts are split by need.** Every page imports the weight-only `@fontsource-variable/archivo` (35 KB Latin). The width-axis file (88 KB) is registered in `globals.css` as its own family, `Archivo Pressure`, and applied to `.pressure-name` only inside a media query that mirrors the effect's gate: fine pointer, hover, at least 768px, motion allowed. Mobile and reduced-motion visitors never download it. Loading it for everyone pushed mobile LCP from 2.2s to 2.6s, because Lighthouse counts the fonts a text element needs toward its paint.
 
 ## Gotchas found the hard way
@@ -73,7 +77,9 @@ Every effect is static under `prefers-reduced-motion`, and content must still re
 - **Lenis already honours `scroll-margin-top`.** Passing an `offset` as well doubles it: in-page links landed 192px down instead of 96px.
 - **Below-the-fold sections use `content-visibility: auto`**, so their positions are estimates until they render. The smooth-scroll link handler re-checks the target on arrival and corrects, at most twice. Anything else that scrolls to a section programmatically needs the same care.
 - **The built CSS is rewritten by Lightning CSS**, for example `min-width: 768px` becomes a range query, so check that a rule exists in the source, not by grepping `dist`.
-- **Lighthouse mobile varies by several points between identical runs here** (total blocking time from 70ms to 320ms on the same build). Run it at least three times, never while another headless Chrome is busy, and quote the median.
+- **Lighthouse mobile varies by several points between identical runs here** (total blocking time from 70ms to 320ms on the same build). Run it at least three times, never while another headless Chrome is busy, and quote the median. To compare against an earlier phase, build `main` in a git worktree and alternate runs between the two servers, so machine load hits both equally.
+- **In DevTools-protocol tests, change emulation on `about:blank` before navigating.** Switching to reduced motion or a phone viewport and then navigating straight from a desktop page produced false positives, such as the 88 KB width font appearing to load on a phone. Clean loads, Lighthouse's included, never fetch it.
+- **A git worktree under the Temp scratch folder cannot be fully removed afterwards.** `node_modules` exceeds Windows' path limit there, and native `.node` binaries stay locked. Put measurement worktrees on a short path, or accept the leftovers in the session temp folder.
 - **`backdrop-filter` creates a containing block for fixed positioning.** The nav uses `backdrop-blur`, so an overlay rendered inside it was clipped to the 64px nav height while every DOM assertion still passed. `Sheet` therefore portals into `document.body`. Check overlays visually, not only through the DOM.
 - The Bash tool mangles long multi-line heredocs; write source files with the Write tool instead.
 
