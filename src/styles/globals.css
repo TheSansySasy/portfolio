@@ -1,5 +1,23 @@
 @import 'tailwindcss';
 
+/* Archivo with its width axis, under its own family name, used only by the
+   animated hero name on fine-pointer desktops (see .pressure-name below). Every
+   other heading uses the 35 KB weight-only Archivo; this file is 88 KB, and on
+   mobile it pushed the largest paint past budget for an effect that never runs
+   there. Latin only, because the name is ASCII. */
+@font-face {
+  font-family: 'Archivo Pressure';
+  src: url('../../node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2')
+    format('woff2-variations');
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* ----------------------------------------------------------------------------
    Design tokens. Hex values are declared once; the theme rules only remap
    which set is active, so light and dark can never drift apart.
@@ -108,7 +126,8 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
+    /* No native smooth scrolling: Lenis drives in-page links, and reduced
+       motion should jump. */
   }
 
   body {
@@ -181,5 +200,166 @@
     font-size: clamp(1.125rem, 1.6vw, 1.5rem);
     line-height: 1.45;
     text-wrap: pretty;
+  }
+
+  /* Sections below the hero skip layout and paint until they approach the
+     viewport. Phase 3 added roughly 350 below-the-fold elements, and the page's
+     first full layout became the main long task on mobile. Measured at a 412px
+     viewport, a fresh layout of <main> fell from 19.8ms to 1.7ms with this on.
+     Content stays in the DOM and the accessibility tree, and `auto` remembers
+     each section's real height once it has rendered. */
+  main > section:not(#top) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1000px;
+  }
+
+  /* ---- Effects -------------------------------------------------------- */
+
+  /* Hero name (PressureName). Sized from its own width with container units,
+     so the letters span the column with no JavaScript measurement and no
+     layout shift. 12.8cqi is measured, not guessed: at weight 800 and width 100
+     the eleven letters needed 1461px at 14.5cqi in a 1377px column, and the
+     rest state is wider than any pressed state because far letters narrow to
+     width 72. 12.8cqi leaves about 6% slack at rest, and letter widths scale
+     with font size, so the fit holds at every viewport. */
+  .pressure-name {
+    container-type: inline-size;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    line-height: 0.9;
+    text-wrap: nowrap;
+  }
+
+  /* The width axis only matters where the name animates. This mirrors the gate
+     in PressureName.tsx (FINE_POINTER_DESKTOP plus motion allowed); elsewhere
+     the name renders in the weight-only file and the 88 KB font is never fetched. */
+  @media (pointer: fine) and (hover: hover) and (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    .pressure-name {
+      font-family: 'Archivo Pressure', var(--font-display);
+    }
+  }
+
+  .pressure-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: min(12.8cqi, 11.5rem);
+  }
+
+  .pressure-char {
+    display: inline-block;
+    font-variation-settings:
+      'wght' 800,
+      'wdth' 100;
+  }
+
+  .pressure-space {
+    flex: none;
+    width: 0.3em;
+  }
+
+  /* Magnet Lines needles (MagnetField) */
+  .magnet-line {
+    display: block;
+    width: 2px;
+    height: 46%;
+    border-radius: 1px;
+    background: currentColor;
+    transform: rotate(var(--rotate, -10deg));
+  }
+
+  /* Spotlight glow (spotlight.ts), placed by --sx and --sy */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .spotlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 400ms ease;
+    background: radial-gradient(
+      28rem circle at var(--sx, 50%) var(--sy, 50%),
+      color-mix(in oklab, var(--accent) 14%, transparent),
+      transparent 70%
+    );
+  }
+
+  .spotlight:hover::before,
+  .spotlight:focus-visible::before {
+    opacity: 1;
+  }
+
+  /* Scroll reveal (Reveal.tsx). Hidden only once main.tsx marks the document. */
+  .reveal-ready .reveal {
+    opacity: 0;
+    translate: 0 12px;
+    transition:
+      opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      translate 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .reveal-ready .reveal.is-in {
+    opacity: 1;
+    translate: none;
+  }
+
+  /* Section headings (SplitHeading): each word rises out of its own mask. The
+     padding and matching negative margin stop descenders being clipped. */
+  .split-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-block: 0.12em;
+    margin-block: -0.12em;
+  }
+
+  .split-word {
+    display: inline-block;
+  }
+
+  .reveal-ready .split-heading .split-word {
+    translate: 0 110%;
+    transition: translate 850ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: calc(var(--i, 0) * 60ms);
+  }
+
+  .reveal-ready .split-heading.is-in .split-word {
+    translate: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-ready .reveal {
+      opacity: 1;
+      translate: none;
+    }
+
+    .reveal-ready .split-heading .split-word {
+      translate: none;
+    }
+
+    .spotlight::before {
+      display: none;
+    }
+  }
+}
+
+@layer base {
+  /* Film grain. A static SVG noise tile rather than a canvas redrawn every few
+     frames: same texture, no main-thread cost. Sits behind in-flow content, so
+     it never lowers text contrast. Opacity comes from the theme's --noise. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--noise);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }

@@ -1,6 +1,6 @@
 # Sanskar Rai — Portfolio Website Plan
 
-Status: **PLAN v1.3, 2026-09-12.** Single-page site on Cloudflare Workers (section 10). **Phase 0 complete 2026-09-11**: Vite + React + TypeScript scaffold, repo at github.com/TheSansySasy/portfolio. **Deployed 2026-09-12** to Cloudflare Workers at portfolio.rai-sanskar304.workers.dev. Next: Phase 1.
+Status: **PLAN v1.4, 2026-09-15.** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged and live at portfolio.rai-sanskar304.workers.dev, together with the positioning correction of 2026-09-14 (decision 22). **Phase 3 (effects) is in progress on `phase-3-effects`**; section 4 records what was actually built and what was deliberately left out.
 Remaining open items are in section 15.
 
 ---
@@ -25,11 +25,13 @@ Remaining open items are in section 15.
 | 14 | Framework | **Vite + React 19 + TypeScript strict + Tailwind v4**, static output. No server-side rendering |
 | 15 | Case studies | **Overlay dossier**, hash deep-linked |
 | 16 | Extra showcase methods | **Live sanitized demo, recorded X++ walkthroughs, on-page simulations, annotated code walkthroughs.** Plus the defaults: write-ups, repos, downloadable runbooks, a recommendations slot |
-| 17 | Headline | Undecided. Shortlist kept in section 2; decided in Phase 2 with real copy around it |
+| 17 | Headline | "I build and run the systems behind the ERP." is live as the default. The final pick waits on Sanskar's proofread; the shortlist stays in section 2 |
 | 18 | Repo name | `portfolio`, at github.com/TheSansySasy/portfolio, public |
-| 19 | LinkedIn URL, Credly link | Given later, non-blocking |
+| 19 | LinkedIn URL, credential link, MB-500 date | Supplied 2026-09-14: LinkedIn `thesanskarrai`, MB-310 verified through its Microsoft Learn credential page, MB-500 targeted for November 2026 |
 | 20 | Monogram | **Modular grid mark**, chosen 2026-09-13. The roundel is reserved for the back of the lanyard badge; the ligature is unused |
 | 21 | Display font | **Archivo** variable, chosen 2026-09-13. Roboto Flex was the alternative and has been removed |
+| 22 | Positioning | **Corrected 2026-09-14: not a D365 F&O consultant.** Python engineer in cloud and DevOps, with Business Central integration in production. Tectura was functional training (MB-310); X++ and the thirteen extension modules are self-study; the Copilot rollout was a real engagement. Role line: Python Engineer · Cloud & DevOps · Dynamics 365 Integration |
+| 23 | Phase 3 implementation | **Decided 2026-09-15.** No GSAP and no Motion: reveals and word rises are CSS, grain is a static SVG tile, figures use a small count-up. The only new dependencies are `lenis` and `gl-matrix`. React Bits sources are MIT + Commons Clause and were adapted with their bugs fixed (section 4) |
 
 ---
 
@@ -44,16 +46,18 @@ Remaining open items are in section 15.
   3. Roundel: SR centered, `SANSKAR RAI · SANSYSASY` around the ring (doubles as the badge back).
   If Sanskar wants to hand-tweak: Inkscape (free, best for SVG on Windows), Figma or Penpot (free, browser), Canva, Affinity Designer (paid). Fastest coherent route: start from Archivo letterforms, then customize.
 
-**Positioning (balanced, one identity).**
-- Three pillars, always shown together in this order: **Dynamics 365** (F&O, X++, Business Central integration) · **Python & AI pipelines** (FastAPI, LLM extraction, billing systems) · **Azure & operations** (SQL Server Always On, CI/CD, Linux).
+**Positioning (one identity, corrected 2026-09-14).**
+- Three pillars, in this order: **Python & AI pipelines** (FastAPI, LLM extraction, billing systems) · **Azure & operations** (SQL Server Always On, CI/CD, Linux) · **Dynamics 365 integration** (Business Central connectors in production; F&O certified on the functional side through MB-310, developer track in progress).
+- Never present him as an F&O consultant. His production Dynamics work is Business Central integration, and X++ is self-study.
 - No site-wide mode. A lightweight **lens filter** on the Work and Stack sections: `All · D365 · Engineering · Cloud`. Default All.
 
-**Headline shortlist (decide in Phase 2; all five previewable in the styleguide entry).**
-1. "I build and run the systems behind the ERP."
-2. "Dynamics 365 on top. Python and Azure underneath."
+**Headline shortlist (all five previewable in the styleguide entry; the first is live).**
+1. "I build and run the systems behind the ERP." *(live)*
+2. "Python and Azure underneath Dynamics 365."
 3. "I make ERPs talk to AI, and keep the servers up."
-4. "From X++ to FastAPI to failover."
-5. "ERP consultant who also runs the servers."
+4. "From FastAPI to failover."
+5. "The engineer behind the ERP integration."
+Revised 2026-09-14: the earlier "ERP consultant who also runs the servers" and the X++-first line overstated the F&O experience.
 Rule: under ten words, says what you do; the decrypting role line beneath carries the three titles.
 
 **Voice rules.** First person. Short sentences. Specific over generic: name the error code, the count, the tool. War stories welcome. No buzzwords. Light humor fine. Every section answers "what did I actually do" before "what do I know".
@@ -93,7 +97,7 @@ Swiss / International Typographic Style for structure; neo-futurism for atmosphe
 12 columns, max width 1440px, 24px gutters, 80-160px section spacing. Every section opens with a mono index and label (`02 / ABOUT`), a 1px rule, an Archivo heading, optional one-line lede. Asymmetric two-column compositions on desktop; single column under 768px.
 
 ### 3.5 Motion system
-- GSAP + ScrollTrigger for scroll reveals and pinning; Motion for component micro-interactions; Lenis smooth scroll at low strength, also used for anchor scrolling.
+- **As built in Phase 3:** CSS transitions triggered by IntersectionObserver for section reveals and word-by-word heading rises; requestAnimationFrame loops for the pointer effects, which stop once idle; Lenis at low strength for wheel scrolling and in-page links. GSAP and Motion were planned and dropped as unnecessary weight.
 - `prefers-reduced-motion`: Lenis off, reveals instant, anchors jump, every effect renders its static fallback.
 - **One signature effect per section.** Each section has exactly one attention-grabbing animated element; everything else in it is quiet (opacity plus 12px reveals only). Reasons: one focal point for the eye; each WebGL or canvas effect costs frames and two at once stutter on a laptop; the page reads as designed, not as a demo reel.
 
@@ -103,16 +107,16 @@ Swiss / International Typographic Style for structure; neo-futurism for atmosphe
 
 | # | Effect | Source | Placement | Theme behavior | Fallback |
 |---|---|---|---|---|---|
-| 1 | **Text Pressure** | React Bits, no deps | Hero: `SANSKAR RAI` | `textColor` from tokens | Static heavy weight |
-| 2 | **Decrypted Text** | React Bits, motion | Hero role line cycling `D365 F&O CONSULTANT` / `PYTHON ENGINEER` / `AZURE & DEVOPS`; lens filter transitions; 404 | Token colors | Plain text |
-| 3 | **Magnet Lines** | React Bits, no deps | Background of "By the numbers" | Line color from tokens | Static lines |
-| 4 | **Infinite Menu** | React Bits, gl-matrix | Stack: draggable sphere of tech logo tiles, each with a one-line note and link | Logos drawn onto a runtime canvas atlas in the theme tile color; `backgroundColor` from tokens | Grouped chip grid; a screen-reader list always in the DOM |
+| 1 | **Text Pressure** (built, Phase 3) | React Bits, adapted | Hero: `SANSKAR RAI`, driving Archivo's weight and width axes for a fine pointer near the hero | Inherits the text colour | Static weight 800, including on touch screens |
+| 2 | **Decrypted Text** (built, Phase 3) | React Bits, rewritten | Hero role line, revealed once on load and replayed on hover. It does not cycle, so all three roles stay readable | Inherits the accent text colour | Plain text |
+| 3 | **Magnet Lines** (built, Phase 3) | React Bits, adapted | Its own band above "By the numbers", never behind the figures | `currentColor` | Static needles |
+| 4 | **Infinite Menu** (built, Phase 3) | React Bits, adapted, gl-matrix | Stack: draggable sphere of typographic tiles, one per tool, with the facing tool's note in an overlay. Desktop fine pointers only, lazy-loaded | Atlas redrawn from theme tokens on toggle | The full grouped list, which always renders below the sphere |
 | 5 | **Lanyard** | React Bits: three, R3F, drei, rapier, meshline | About: swinging badge. Front: monogram, name, title, `MB-310`. Back: roundel + QR to LinkedIn. Strap printed `SANSYSASY · SANSKAR RAI ·` | Two texture sets swapped on toggle; transparent canvas | Tilted Card with the badge image. Desktop and pointer-fine only |
 | 6 | **Particle Text** | **Custom**, canvas, zero deps | Contact: `LET'S TALK` assembles from particles, scatters from the cursor, reforms | Particle color from tokens | Static text |
 
-Supporting pieces, all free or custom: **Glass Surface** nav · **Spotlight Card** and **Tilted Card** for work cards · **Split Text** (GSAP) for headings entering · **Noise** grain overlay, opacity per theme · **Counter** for numbers · **Letter Glitch** behind the 404 · **Always On failover simulation** (custom SVG + Motion) in the Operations section: two SQL nodes, a listener, a witness, heartbeat pulses, click the primary to fail it and watch the listener move · **Heat-map calendar** (custom SVG, 52 x 7, thermal ramp) · **Slab-pricing calculator** and **LLM token-cost calculator** inside dossiers · **Architecture diagrams** (custom SVG, theme-aware).
+Supporting pieces as built in Phase 3: the nav keeps its CSS backdrop blur as the glass layer, so the Glass Surface component was not needed · **Spotlight** on work cards, as a CSS pseudo-element · word-by-word **heading rise** on every section, in CSS · **fade and 12px reveal** on every section body · **count-up** figures in "By the numbers" · static SVG **film grain**. Still to come in Phase 4: the **Always On failover simulation** in the Operations section (two SQL nodes, a listener, a witness; click the primary to fail it and watch the listener move), the **heat-map calendar**, the **slab-pricing** and **token-cost calculators** inside dossiers, and **Letter Glitch** behind the 404. Dropped in Phase 3: **Tilted Card**, because text-bearing cards read worse when they tilt, and the animated **Noise** canvas, which redraws a million random pixels every other frame.
 
-Vendoring rule: React Bits components are copy-paste sources. They live under `src/effects/` with a header comment (origin URL, MIT, date vendored) and get patched locally: devicePixelRatio cap at 2, pause when off-screen, theme token support, `aria-hidden`. The Lanyard's `card.glb` and textures load through Vite `?url` imports.
+Vendoring rule: React Bits components are copy-paste sources licensed **MIT + Commons Clause**: usable inside this site, not redistributable as components (full text in `src/effects/LICENSE-react-bits.md`). They live under `src/effects/` with a header comment naming the origin, the licence, the date vendored and every local change, and are patched for a devicePixelRatio cap of 2, pausing off screen, theme tokens, `aria-hidden` and reduced motion. The bugs fixed in the originals are listed in CLAUDE.md. The Lanyard's `card.glb` and textures will load through Vite `?url` imports.
 
 Hero background: no WebGL. A faint Swiss crosshair grid at low opacity in both themes. The hero must paint instantly.
 
@@ -120,7 +124,7 @@ Hero background: no WebGL. A faint Swiss crosshair grid at low opacity in both t
 
 ## 5. Framework and stack (final)
 
-**Vite · React 19 · TypeScript strict · Tailwind CSS v4 · vendored React Bits (TS-Tailwind variants) · GSAP + ScrollTrigger · Motion · Lenis · gl-matrix (Infinite Menu) · three, React Three Fiber, drei, rapier, meshline (Lanyard only) · Shiki for annotated code · zod for content metadata · Playwright + axe for tests.**
+**Vite · React 19 · TypeScript strict · Tailwind CSS v4 · adapted React Bits sources · Lenis · gl-matrix (stack sphere) · three, React Three Fiber, drei, rapier, meshline (Lanyard only, Phase 4) · Playwright + axe for tests.** GSAP and Motion were removed in Phase 3. Shiki and zod were never needed: annotated code is unhighlighted by design, and content is typed TypeScript.
 
 Why Vite for a single page: with one page and no blog, the reasons for Next.js (static generation per route, per-route metadata, MDX routing) no longer apply. Vite outputs a static folder that any host serves, including Nginx on Sanskar's VPS with no Node process. React Bits' own site is built on Vite. No hydration edge cases for six canvases. Trade-offs accepted: client rendering with full static meta tags (optional prerender later); a blog later means a separate site on a subdomain.
 
@@ -168,13 +172,13 @@ C:\MyWebsite
 | # | Section | Signature | Spec |
 |---|---|---|---|
 | 00 | **Nav** | Glass Surface | Left: SR monogram. Center: About · Work · Stack · Ops · Contact. Right: `@SansySasy`, theme toggle, Resume button. Sheet menu under 768px |
-| 01 | **Hero** | Text Pressure + Decrypted Text | `SANSKAR RAI` at up to 14vw. Role line decrypting through the three roles. Headline (section 2 shortlist). CTAs: *See the work*, *Download resume*. Three mono numbers: 26,000+ documents · 99.9% uptime · MB-310. Crosshair grid background. Scroll cue |
+| 01 | **Hero** | Text Pressure + Decrypted Text | `SANSKAR RAI` sized at 14.5cqi, capped at 13rem. The role line decrypts once: Python Engineer · Cloud & DevOps · Dynamics 365 Integration. Live headline from section 2. CTAs: *See the work* and both resume tracks. Three figures: 26,000+ documents · 99.9% uptime · MB-310 |
 | 02 | **About** | Lanyard | 120-180 words, first person: JUIT (cloud specialization, ACM chapter), Tectura and MB-310, Runtime Solutions and the GCP-to-Azure migration, EBT and the AI document platform plus SQL Server HA. One line on SansySasy. One line on daily agentic tooling. Badge on the right. Delhi · remote · UTC+5:30 |
-| 03 | **Experience** | Split Text | Timeline on a 1px rule. Per role: employer, title, dates, 3-4 impact bullets from the resumes, mono tags. Employers named; clients anonymized |
-| 04 | **Selected work** | Spotlight / Tilted cards, lens filter | Six dossier cards: index, title, one-line outcome with a number, tags, theme-aware SVG thumbnail. Click opens the dossier overlay |
-| 05 | **Stack** | Infinite Menu, lens filter | Sphere of logo tiles; centered tile shows name + one-line note. Mobile: grouped chips. Groups: Dynamics 365 · Languages · Backend · AI & agents · Cloud · Data · Ops |
+| 03 | **Experience** | Word-rise heading, body reveal | Timeline on a 1px rule. Per role: employer, title, dates, 3-4 impact bullets from the resumes, mono tags. Employers named; clients anonymized |
+| 04 | **Selected work** | Spotlight cards (lens filter not yet built) | Six dossier cards: index, title, one-line outcome with a number, tags, theme-aware SVG thumbnail. Click opens the dossier overlay |
+| 05 | **Stack** | Infinite Menu sphere | Desktop: draggable sphere of typographic tiles, the facing tile named with its note. The grouped list always renders below it, and is the whole section on touch screens, under reduced motion and without WebGL 2. Groups: Dynamics 365 · Languages · Backend and APIs · AI and agents · Cloud · Data · Operations |
 | 06 | **Operations** | Failover simulation | Heading: *I keep production up.* Interactive Always On topology. Beside it: the Kerberos `KRB_AP_ERR_MODIFIED` story in four sentences, monitoring line (Grafana, Prometheus, Zabbix), alerting and failover design bullets |
-| 07 | **By the numbers** | Magnet Lines + heat map + Counter | 26,000+ documents · 5 products · 99.9% uptime · 60% faster deploys · 80% less downtime · 13 vendor defects found · 13 F&O modules. Heat-map calendar labeled *"shape illustrative, totals real"* |
+| 07 | **By the numbers** | Magnet Lines band + count-up (heat map in Phase 4) | 26,000+ documents · 5 products · 99.9% uptime · 60% faster deploys · 80% less downtime · 13 vendor defects found · 13 F&O modules. Heat-map calendar labeled *"shape illustrative, totals real"* |
 | 08 | **Certifications** | fade | MB-310 with Credly link, MB-500 in progress with target date, planned Azure certs |
 | 09 | **Contact** | Particle Text + form | `LET'S TALK` in particles. Form: name, email, message, honeypot, Turnstile. Email + copy button, LinkedIn, GitHub, resume downloads, availability line |
 | — | **Footer** | — | Colophon: "Built with Vite, React and React Bits. Set in Archivo, Inter and JetBrains Mono." `@SansySasy` · view-source link · © 2026 |
@@ -322,7 +326,7 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 | **0. Environment** | Claude installs Node LTS via winget and pnpm via corepack; `git init`; create `TheSansySasy/portfolio`; Vite React TS hello-world | `pnpm dev` serves hello-world; repo pushed | GitHub CLI login |
 | **1. Foundation** | Tokens for both themes; fonts; theme hook and no-flash script; layout shell (nav, footer, section primitives); Sheet overlay + hash router; three monogram SVGs; `styleguide.html` with the headline shortlist; CI; preview deploy | Empty shell scores 100 / 100 / 100 / 100 in both themes | Pick monogram and display font |
 | **2. Content first, effects off** | Every section static with real first-person copy from the resumes; download buttons; dossiers 1 and 2 with diagrams and annotated code; static meta, `og.png`, JSON-LD; Web3Forms contact | Launch-worthy with zero animation, both themes, Lighthouse at least 95, axe clean | Copy review; headline choice; LinkedIn URL; Credly link; MB-500 target date |
-| **3. Light effects** | Text Pressure, Decrypted Text, Magnet Lines, Infinite Menu, Split Text, Noise, Glass nav, Spotlight and Tilted cards, Counter; GSAP scroll system; Lenis; reduced motion; theme-aware effect tokens | Budgets hold with effects on | Approve the logo list for the sphere |
+| **3. Light effects** | Text Pressure, Decrypted Text, Magnet Lines, Infinite Menu sphere, word-rise headings, section reveals, spotlight cards, count-up figures, static grain; Lenis; reduced motion; theme-aware effect tokens. GSAP, Motion, Tilted Card and the animated Noise canvas dropped (section 4) | Budgets hold with effects on, in both themes, with reduced motion verified | Nothing: sphere tiles are typographic, so there is no logo list to approve |
 | **4. Heavy and custom** | Lanyard with badge textures for both themes, strap print, holographic foil, desktop gate and fallback; custom Particle Text; heat-map calendar; FailoverSim; SlabPricingCalc; TokenCostCalc | Desktop and mobile both pass budgets; snapshots approved | Approve the badge design |
 | **5a. Repos and dossiers** | Sanitize and publish the three showcase repos with READMEs and diagrams; dossiers 3-6; runbook downloads; GitHub profile README | Repos public and linked from the site | Access to source to sanitize, or pair on extraction |
 | **5b. Demo and recordings** | `api/` service (contact + demo extraction, caps, Turnstile) deployed on the VPS; contact switched over; recorded X++ clips edited and embedded | Demo returns extraction for sample documents within the cap; clips play in the D365 dossier | VPS access, an LLM API key with a spend limit, an F&O dev VM to record in |
@@ -368,14 +372,14 @@ Layout and copy are moderate work. Each React Bits effect is copy-paste plus a f
 ---
 
 ## 14. Removed across revisions
-Evil Eye · blog and `/writing` · site-wide Consultant/Engineer mode (lens filter chips instead) · photo on the badge (monogram) · React Bits Pro purchase (custom build) · Next.js and all separate routes (`/work/[slug]`, `/resume`, `/styleguide`) in favor of one page with overlays.
+Evil Eye · blog and `/writing` · site-wide Consultant/Engineer mode (lens filter chips instead) · photo on the badge (monogram) · React Bits Pro purchase (custom build) · Next.js and all separate routes (`/work/[slug]`, `/resume`, `/styleguide`) in favor of one page with overlays · the D365 F&O consultant framing (2026-09-14) · GSAP, Motion, Tilted Card, the Glass Surface component and the animated Noise canvas (Phase 3) · a cycling role line, replaced by one line showing all three roles.
 
 ---
 
 ## 15. Open items, non-blocking
 1. GoDaddy access to change nameservers or add records. Needed at Phase 6. Domain is known: `sansysasy.com`.
-2. LinkedIn URL, Credly badge link, MB-500 target date. Needed in Phase 2.
-3. Headline: pick from the section 2 shortlist in Phase 2.
-4. Monogram and display font: pick from drafts in Phase 1.
+2. ~~LinkedIn URL, credential link, MB-500 target date.~~ Supplied 2026-09-14.
+3. Sanskar's proofread of the Phase 2 copy, deferred by him on 2026-09-15. The final headline pick comes with it.
+4. ~~Monogram and display font.~~ Chosen 2026-09-13.
 5. Hosting and analytics: decide at Phase 6.
 6. Whether an F&O dev VM is available to record in. Needed before Phase 5b.

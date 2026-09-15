@@ -4,11 +4,11 @@ Working notes for this repo: conventions, environment quirks, and deployment fac
 
 ## What this is
 
-Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), covering three pillars: Dynamics 365 F&O, Python and AI pipelines, Azure and operations. Live domain will be **sansysasy.com**. Currently at `https://portfolio.rai-sanskar304.workers.dev` with `noindex` set until launch.
+Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), a Python engineer working in cloud and DevOps, whose Dynamics 365 work in production is Business Central integration. Live domain will be **sansysasy.com**. Currently at `https://portfolio.rai-sanskar304.workers.dev` with `noindex` set until launch.
 
-**Phase status:** Phases 0, 1 and 2 are complete and merged to `main`, so production serves the written site. **Phase 3 is not started and must not be started without Sanskar saying so.**
+**Positioning rule (corrected 2026-09-14): never describe him as a D365 F&O consultant.** Tectura was functional training that earned MB-310; X++ and the thirteen extension modules are self-study; MB-500 is targeted for November 2026. The Copilot rollout was a real engagement. The role line is `Python Engineer · Cloud & DevOps · Dynamics 365 Integration`.
 
-Before Phase 3 begins, Sanskar is supplying: his LinkedIn URL, the Credly link for MB-310, and a target date for MB-500. He will also review the Phase 2 copy (About, experience bullets, both dossiers) and may correct facts or tone. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
+**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. **Phase 3 (effects) was authorised on 2026-09-15 and is in progress on `phase-3-effects`.** LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
 
 ## Commands
 
@@ -41,8 +41,39 @@ Two accessibility traps already hit and fixed: a `<dl>` may not contain `<p>` (u
 - Theme state: `data-theme` on `<html>`, `system` removes the attribute so the media query applies. The inline script in `index.html` and `styleguide.html` applies the stored choice before first paint and must stay in sync with `applyTheme()` in `src/lib/theme.ts`.
 - Fonts come from `@fontsource-variable/*` imported in the entry files. **Decided 2026-09-13:** display font is **Archivo** (Roboto Flex was the alternative and has been removed), and the mark is the **modular grid monogram**; the roundel stays reserved for the back of the lanyard badge, and the ligature is unused.
 
+## Effects (Phase 3)
+
+React Bits sources are **MIT + Commons Clause**: free to use and modify inside this website, not to be resold or redistributed as components. The licence text lives at `src/effects/LICENSE-react-bits.md`, and every adapted file names its origin and lists its local changes in a header comment.
+
+| Section | Effect | File | Notes |
+|---|---|---|---|
+| Hero name | Text Pressure | `src/effects/PressureName.tsx` | Sized in CSS with `cqi` units, animates Archivo `wght` + `wdth` only for a fine pointer near the hero |
+| Hero role line | Decrypted Text | `src/effects/DecryptLine.tsx` | Reveals the full line once; does not cycle roles, so all three stay readable |
+| Every section heading | Word rise | `src/effects/SplitHeading.tsx` | CSS transitions on spans, not GSAP |
+| Every section body | Fade and 12px rise | `src/effects/Reveal.tsx` | IntersectionObserver plus CSS |
+| Work cards | Spotlight | `src/effects/spotlight.ts` | Pseudo-element placed by custom properties, no React state |
+| Stack | Infinite Menu sphere | `src/effects/StackSphere.tsx` | Lazy chunk, desktop fine pointers only; the full list always renders below it |
+| Numbers | Magnet Lines, count-up | `src/effects/MagnetField.tsx`, `CountUp.tsx` | Magnet field in its own band, never behind the figures |
+| Whole page | Film grain | `body::before` in `globals.css` | Static SVG noise tile |
+| Whole page | Smooth wheel scroll | `src/lib/smoothScroll.ts` | Lenis; overlays pause it and carry `data-lenis-prevent` |
+
+**Deliberately not used, and why.** React Bits *Noise* redraws a million random pixels every other frame forever, so the grain is static CSS instead. *Glass Surface*, *Tilted Card* and *Counter* would pull in the Motion library for effects the nav's existing blur, the spotlight and a small count-up already cover. **GSAP** is not needed at all. The only animation dependencies are `lenis` and `gl-matrix`.
+
+**Bugs fixed in the originals:** Decrypted Text hid its screen-reader copy with `visibility: hidden`, so nothing was announced. Infinite Menu never cancelled its render loop or removed listeners, so each re-render stacked another loop, and it set `touch-action: none`, which traps page scrolling on phones. Text Pressure sized itself in a debounced effect, so the hero painted at 24px and then jumped.
+
+Every effect is static under `prefers-reduced-motion`, and content must still read correctly with every effect removed. Reveals hide content only after `main.tsx` adds `reveal-ready` to `<html>`.
+
+**Fonts are split by need.** Every page imports the weight-only `@fontsource-variable/archivo` (35 KB Latin). The width-axis file (88 KB) is registered in `globals.css` as its own family, `Archivo Pressure`, and applied to `.pressure-name` only inside a media query that mirrors the effect's gate: fine pointer, hover, at least 768px, motion allowed. Mobile and reduced-motion visitors never download it. Loading it for everyone pushed mobile LCP from 2.2s to 2.6s, because Lighthouse counts the fonts a text element needs toward its paint.
+
 ## Gotchas found the hard way
 
+- **A `cd` in the Bash tool moves the working directory for every later call, PowerShell included.** On 2026-09-15 a `cd` into a package inside `node_modules` made the next `pnpm add` install into that package and register it in the project lockfile as a fake importer. Use absolute paths, or start PowerShell commands with `Set-Location C:\MyWebsite`, and check `package.json` after any install.
+- **Repairing a tampered package under `node_modules/.pnpm`.** `pnpm install --force` does not overwrite a package directory that still exists, and plain `pnpm install` does not recreate one that was deleted: it answers "Already up to date" from its own state file. The working sequence is delete the directory with a literal path (the harness refuses a recursive delete whose target is a variable), then `pnpm install --force`. `pnpm remove` followed by `pnpm add` does not help, because pnpm keeps and reuses the virtual-store directory.
+- **The Browser pane runs no animation frames and no IntersectionObserver callbacks while it is hidden.** Synchronous layout reads still work there, but anything driven by `requestAnimationFrame` (the pressure name, count-ups, the sphere) or by observers (reveals, lazy mounts) stalls, and screenshots time out. Verify effects in headless Chrome instead, over the DevTools protocol with Node's built-in `WebSocket`: no dependencies, real mouse input, reduced-motion and touch emulation, and screenshots saved to disk.
+- **Lenis already honours `scroll-margin-top`.** Passing an `offset` as well doubles it: in-page links landed 192px down instead of 96px.
+- **Below-the-fold sections use `content-visibility: auto`**, so their positions are estimates until they render. The smooth-scroll link handler re-checks the target on arrival and corrects, at most twice. Anything else that scrolls to a section programmatically needs the same care.
+- **The built CSS is rewritten by Lightning CSS**, for example `min-width: 768px` becomes a range query, so check that a rule exists in the source, not by grepping `dist`.
+- **Lighthouse mobile varies by several points between identical runs here** (total blocking time from 70ms to 320ms on the same build). Run it at least three times, never while another headless Chrome is busy, and quote the median.
 - **`backdrop-filter` creates a containing block for fixed positioning.** The nav uses `backdrop-blur`, so an overlay rendered inside it was clipped to the 64px nav height while every DOM assertion still passed. `Sheet` therefore portals into `document.body`. Check overlays visually, not only through the DOM.
 - The Bash tool mangles long multi-line heredocs; write source files with the Write tool instead.
 

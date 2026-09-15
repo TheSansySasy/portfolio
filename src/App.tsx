@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { SITE } from './content/data/site'
 import { WORK } from './content/data/work'
 import { DossierBody } from './dossiers/DossierBody'
 import { DossierShell } from './dossiers/DossierShell'
+import { startSmoothScroll } from './lib/smoothScroll'
 import { closeDossier, dossierSlug, useHashRoute } from './lib/useHashRoute'
 import { About } from './sections/About'
 import { Certifications } from './sections/Certifications'
@@ -18,6 +20,7 @@ import { Sheet } from './ui/Sheet'
 
 export default function App() {
   const hash = useHashRoute()
+  useEffect(() => startSmoothScroll(), [])
   const slug = dossierSlug(hash)
   const dossier = WORK.find((item) => item.slug === slug) ?? null
 

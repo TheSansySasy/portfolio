@@ -1,4 +1,5 @@
 import { WORK } from '../content/data/work'
+import { trackSpotlight } from '../effects/spotlight'
 import { openDossier } from '../lib/useHashRoute'
 
 export function WorkCards() {
@@ -9,7 +10,8 @@ export function WorkCards() {
           <button
             type="button"
             onClick={() => openDossier(item.slug)}
-            className="group flex h-full w-full flex-col items-start gap-3 p-6 text-left transition-colors hover:bg-surface md:p-8"
+            onPointerMove={trackSpotlight}
+            className="spotlight group flex h-full w-full flex-col items-start gap-3 p-6 text-left transition-colors hover:bg-surface md:p-8"
           >
             <span className="mono-label text-muted">
               <span className="text-accent-text">{item.index}</span>
@@ -21,7 +23,7 @@ export function WorkCards() {
             </span>
             <span className="text-muted">{item.outcome}</span>
             <span className="mono-label mt-auto flex w-full items-center justify-between pt-4">
-              <span className="text-accent-text opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="text-accent-text opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                 Open dossier
               </span>
               <span className="text-muted">{item.written ? 'Written' : 'Outline'}</span>

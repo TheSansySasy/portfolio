@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import { Reveal } from '../effects/Reveal'
+import { SplitHeading } from '../effects/SplitHeading'
 import { Container } from './Container'
 import { SectionLabel } from './SectionLabel'
 
@@ -21,11 +23,17 @@ export function Section({
     <section id={id} aria-labelledby={`${id}-heading`} className="scroll-mt-24 py-20 md:py-28">
       <Container>
         <SectionLabel index={index} label={label} />
-        <h2 id={`${id}-heading`} className="type-section mt-8 max-w-4xl">
-          {heading ?? label}
-        </h2>
-        {lede ? <p className="type-lede mt-6 max-w-2xl text-muted">{lede}</p> : null}
-        {children ? <div className="mt-10">{children}</div> : null}
+        <SplitHeading
+          id={`${id}-heading`}
+          text={heading ?? label}
+          className="type-section mt-8 max-w-4xl"
+        />
+        {lede ? (
+          <Reveal className="mt-6">
+            <p className="type-lede max-w-2xl text-muted">{lede}</p>
+          </Reveal>
+        ) : null}
+        {children ? <Reveal className="mt-10">{children}</Reveal> : null}
       </Container>
     </section>
   )
