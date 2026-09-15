@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react'
 
-/** Scroll-spy for the nav: returns the id of the section nearest the middle. */
-export function useActiveSection(ids: readonly string[]): string {
+/**
+ * Scroll-spy for the nav: returns the id of the section nearest the middle.
+ * Pass `enabled` false until the sections exist; the spy observes them once
+ * it flips to true.
+ */
+export function useActiveSection(ids: readonly string[], enabled = true): string {
   const [active, setActive] = useState(ids[0] ?? '')
 
   useEffect(() => {
+    if (!enabled) return
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null)
@@ -22,7 +27,7 @@ export function useActiveSection(ids: readonly string[]): string {
 
     elements.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
-  }, [ids])
+  }, [ids, enabled])
 
   return active
 }

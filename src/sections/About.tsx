@@ -1,10 +1,12 @@
 import { ABOUT, SECTION_META, SITE } from '../content/data/site'
+import { Reveal } from '../effects/Reveal'
+import { SplitHeading } from '../effects/SplitHeading'
 import { Container } from '../ui/Container'
 import { Monogram } from '../ui/Monogram'
 import { SectionLabel } from '../ui/SectionLabel'
 
 /**
- * The badge is a static card in Phase 2. Phase 4 hangs this same face on a
+ * The badge is a static card for now. Phase 4 hangs this same face on a
  * physics lanyard, with the roundel monogram on the back.
  */
 function Badge() {
@@ -41,21 +43,19 @@ export function About() {
         <SectionLabel index={meta.index} label={meta.label} />
         <div className="mt-8 grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-7">
-            <h2 id="about-heading" className="type-section">
-              {meta.heading}
-            </h2>
-            <div className="mt-8 flex max-w-2xl flex-col gap-5">
+            <SplitHeading id="about-heading" text={meta.heading} className="type-section" />
+            <Reveal className="mt-8 flex max-w-2xl flex-col gap-5">
               {ABOUT.map((paragraph) => (
                 <p key={paragraph.slice(0, 24)}>{paragraph}</p>
               ))}
-            </div>
-            <p className="mono-label mt-8 text-muted">
-              {SITE.location} · {SITE.timezone} · Remote
-            </p>
+              <p className="mono-label mt-3 text-muted">
+                {SITE.location} · {SITE.timezone} · Remote
+              </p>
+            </Reveal>
           </div>
-          <div className="flex justify-start md:col-span-5 md:justify-end">
+          <Reveal className="flex justify-start md:col-span-5 md:justify-end">
             <Badge />
-          </div>
+          </Reveal>
         </div>
       </Container>
     </section>

@@ -9,8 +9,9 @@ import { ThemeToggle } from '../ui/ThemeToggle'
 
 const NAV_IDS = NAV_SECTIONS.map((section) => section.id)
 
-export function Nav() {
-  const active = useActiveSection(NAV_IDS)
+/** `sectionsReady` is false until App has mounted the sections the spy observes. */
+export function Nav({ sectionsReady = true }: { sectionsReady?: boolean }) {
+  const active = useActiveSection(NAV_IDS, sectionsReady)
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (

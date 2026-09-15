@@ -1,4 +1,6 @@
 import { HEADLINE, ROLES, SITE, SUBHEAD } from '../content/data/site'
+import { DecryptLine } from '../effects/DecryptLine'
+import { PressureName } from '../effects/PressureName'
 import { ButtonLink } from '../ui/Button'
 import { Container } from '../ui/Container'
 import { ResumeLinks } from '../ui/ResumeLinks'
@@ -10,8 +12,9 @@ const HIGHLIGHTS = [
 ]
 
 /**
- * Phase 3 swaps the name for Text Pressure and the role line for Decrypted
- * Text. Everything here must read correctly with no animation at all.
+ * The name responds to the pointer (Text Pressure) and the role line decrypts
+ * once on load. Both render as ordinary text first, and stay that way under
+ * reduced motion or on touch screens.
  */
 export function Hero() {
   return (
@@ -25,11 +28,11 @@ export function Hero() {
           </p>
         </div>
 
-        <h1 id="hero-heading" className="type-hero mt-10 font-display">
-          {SITE.name}
-        </h1>
+        <PressureName id="hero-heading" text={SITE.name} className="mt-10" />
 
-        <p className="mono-label mt-6 text-accent-text">{ROLES.join('  ·  ')}</p>
+        <p className="mono-label mt-6 text-accent-text">
+          <DecryptLine text={ROLES.join('  ·  ')} />
+        </p>
 
         <p className="type-lede mt-8 max-w-3xl font-display text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold tracking-[-0.02em]">
           {HEADLINE}

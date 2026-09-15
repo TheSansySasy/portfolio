@@ -39,7 +39,7 @@ export const NUMBERS: Metric[] = [
   {
     value: '13',
     label: 'F&O modules built',
-    note: 'Table and form extensions, chain of command, data entities',
+    note: 'Self-study: table and form extensions, chain of command, data entities',
   },
   {
     value: '2',

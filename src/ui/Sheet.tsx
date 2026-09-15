@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { pauseSmoothScroll, resumeSmoothScroll } from '../lib/smoothScroll'
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -30,6 +31,7 @@ export function Sheet({
 
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    pauseSmoothScroll()
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -58,6 +60,7 @@ export function Sheet({
     return () => {
       document.removeEventListener('keydown', onKeyDown)
       document.body.style.overflow = previousOverflow
+      resumeSmoothScroll()
       restoreFocusTo.current?.focus()
     }
   }, [open, onClose])
@@ -81,6 +84,8 @@ export function Sheet({
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
+        // The page's smooth scroll must not capture the wheel inside the panel.
+        data-lenis-prevent=""
         className="absolute inset-0 overflow-y-auto overscroll-contain bg-bg outline-none md:inset-6 md:rounded-lg md:border md:border-line"
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-glass px-gutter py-4 backdrop-blur-md">
