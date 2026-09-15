@@ -5,16 +5,14 @@ export const SITE = {
   handle: 'SansySasy',
   domain: 'sansysasy.com',
   url: 'https://sansysasy.com',
-  role: 'D365 F&O consultant, Python engineer, Azure and operations',
+  role: 'Python engineer, cloud and DevOps, Dynamics 365 integration',
   location: 'Delhi, India',
   timezone: 'UTC+5:30',
   github: 'https://github.com/TheSansySasy',
   repo: 'https://github.com/TheSansySasy/portfolio',
-  /** Public on the resumes already. Replaced by hello@sansysasy.com at launch. */
+  /** Public on the resumes already. Swaps to an address on the domain once one exists. */
   email: 'sanskarrai@hotmail.com',
-  // Added once Sanskar sends the links.
-  linkedin: null as string | null,
-  credly: null as string | null,
+  linkedin: 'https://www.linkedin.com/in/thesanskarrai/',
 } as const
 
 export const RESUMES = [
@@ -30,26 +28,33 @@ export const RESUMES = [
   },
 ] as const
 
-export const ROLES = ['D365 F&O Consultant', 'Python Engineer', 'Azure & DevOps'] as const
+/**
+ * Titles he can actually be hired as today. "Azure & DevOps" was removed
+ * because it reads as the Azure DevOps product, and the F&O consultant title
+ * was removed because he does not hold it: that track is certification and
+ * self-study, which the About and Stack sections say plainly.
+ */
+export const ROLES = ['Python Engineer', 'Cloud & DevOps', 'Dynamics 365 Integration'] as const
 
 /** Headline candidates. The first is live; the rest stay for reference. */
 export const HEADLINES = [
   'I build and run the systems behind the ERP.',
-  'Dynamics 365 on top. Python and Azure underneath.',
+  'Python and Azure underneath Dynamics 365.',
   'I make ERPs talk to AI, and keep the servers up.',
-  'From X++ to FastAPI to failover.',
-  'ERP consultant who also runs the servers.',
+  'From FastAPI to failover.',
+  'The engineer behind the ERP integration.',
 ] as const
 
 export const HEADLINE = HEADLINES[0]
 
 export const SUBHEAD =
-  'Dynamics 365 on top, Python pipelines in the middle, Azure and SQL Server underneath. Two years of building both halves and keeping them running.'
+  'I write the Python that feeds Dynamics 365, and I run the Azure and SQL Server underneath it. MB-310 certified on the finance side, working toward the developer side.'
 
 export const ABOUT: string[] = [
-  'I studied computer science at Jaypee University with a cloud specialisation, then went straight into Dynamics 365. Tectura trained me on Finance and Operations, I earned MB-310, and I started writing X++ in a development VM.',
-  'At Runtime Solutions I moved from consulting into infrastructure: Azure environments, a migration off GCP, and deployment pipelines that cut release time by more than half.',
-  'Now at EBT I do both halves. I build the AI document platform in Python, wire it into Business Central, and keep the SQL Server cluster underneath it alive. The parts I like most are where the ERP meets the infrastructure: a Kerberos error that turns out to be an offline cluster resource, a billing engine that has to price history correctly, a vendor codebase that needs auditing before anyone can trust it.',
+  'I studied computer science at Jaypee University with a cloud specialisation, then joined Tectura as a trainee. That programme was functional: how Dynamics 365 Finance and Operations works from the finance side, not how it is built. I came out of it with MB-310.',
+  'At Runtime Solutions I moved into infrastructure. Azure environments across five databases, a migration off GCP, and deployment pipelines that cut release time by more than half.',
+  'Now at EBT I write Python. I build the AI document platform, wire it into Dynamics 365 Business Central for corporate clients, and keep the SQL Server cluster underneath it alive. The Dynamics work I do in production is integration rather than configuration, and the parts I like most are where the ERP meets the infrastructure: a Kerberos error that turns out to be an offline cluster resource, a billing engine that has to price history correctly, a vendor codebase that needs auditing before anyone can trust it.',
+  'F&O development is what I am working on next, on my own time: X++ extensions across thirteen modules, then MB-500. I would rather say that plainly than imply experience I do not have yet.',
   'SansySasy was my gamer tag. It stuck, so it is my handle everywhere now.',
 ]
 

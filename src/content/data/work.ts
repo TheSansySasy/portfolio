@@ -54,8 +54,8 @@ export const WORK: WorkCard[] = [
   {
     slug: 'd365-fo-extensions',
     index: '06',
-    title: '13 modules of F&O extensions, plus a Copilot rollout',
-    outcome: 'Reusable rollout runbook, Copilot verified live',
+    title: 'Learning F&O development, and a Copilot rollout',
+    outcome: 'Thirteen modules of extensions on my own time; Copilot enabled on a client environment',
     lens: ['D365'],
     written: false,
   },

@@ -1,5 +1,5 @@
 import { CERTIFICATIONS } from '../content/data/certifications'
-import { SECTION_META, SITE } from '../content/data/site'
+import { SECTION_META } from '../content/data/site'
 import { Section } from '../ui/Section'
 
 export function Certifications() {
@@ -23,8 +23,12 @@ export function Certifications() {
                 <p className="font-medium">{cert.name}</p>
                 <p className="mt-2 text-muted">{cert.detail}</p>
                 {cert.url ? (
-                  <a href={cert.url} className="mono-label mt-3 inline-block text-accent-text">
-                    Verify on Credly
+                  <a
+                    href={cert.url}
+                    rel="noopener"
+                    className="mono-label mt-3 inline-block border-b border-line pb-0.5 transition-colors hover:border-accent hover:text-accent-text"
+                  >
+                    Verify on Microsoft Learn
                   </a>
                 ) : null}
               </div>
@@ -32,11 +36,6 @@ export function Certifications() {
           </li>
         ))}
       </ul>
-      {SITE.credly ? null : (
-        <p className="mono-label mt-6 text-muted">
-          Verification links go here once the Credly badge URL is in place.
-        </p>
-      )}
     </Section>
   )
 }

@@ -23,6 +23,11 @@ export function Footer() {
             </a>
           </li>
           <li>
+            <a href={SITE.linkedin} className="mono-label text-muted hover:text-accent-text">
+              LinkedIn
+            </a>
+          </li>
+          <li>
             <a href={SITE.repo} className="mono-label text-muted hover:text-accent-text">
               View source
             </a>

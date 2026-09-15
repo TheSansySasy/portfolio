@@ -44,10 +44,10 @@ export const EXPERIENCE: Role[] = [
     title: 'Trainee, D365 Finance & Operations Consultant',
     period: 'September 2024 — May 2025',
     bullets: [
-      'I completed a structured functional and technical programme and earned Microsoft MB-310, the Dynamics 365 Finance Functional Consultant Associate certification.',
-      'I wrote X++ in an F&O development VM while preparing for MB-500, using Git and Azure DevOps across project branches.',
+      'I completed the functional training programme, which covered how Dynamics 365 Finance and Operations works from the finance side, and earned Microsoft MB-310.',
+      'The technical side I picked up afterwards on my own: X++ in a development VM, Git and Azure DevOps across project branches, and MB-500 to sit next.',
     ],
-    tags: ['D365 F&O', 'X++', 'MB-310', 'Azure DevOps'],
+    tags: ['D365 F&O (functional)', 'MB-310', 'X++ (self-study)', 'Azure DevOps'],
   },
   {
     employer: 'EasyGov',
