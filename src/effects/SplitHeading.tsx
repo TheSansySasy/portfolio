@@ -1,6 +1,20 @@
 import { Fragment, type CSSProperties } from 'react'
 import { useInView } from '../lib/useInView'
 
+/** The word spans both animated headings share: each word inside its own mask. */
+export function SplitWords({ text }: { text: string }) {
+  return text.split(' ').map((word, index) => (
+    <Fragment key={`${index}-${word}`}>
+      {index > 0 ? ' ' : null}
+      <span className="split-mask">
+        <span className="split-word" style={{ '--i': index } as CSSProperties}>
+          {word}
+        </span>
+      </span>
+    </Fragment>
+  ))
+}
+
 /**
  * Section headings rise word by word as they scroll in, each word out of its
  * own mask. The look follows React Bits "Split Text"
@@ -22,20 +36,10 @@ export function SplitHeading({
     once: true,
     rootMargin: '0px 0px -10% 0px',
   })
-  const words = text.split(' ')
 
   return (
     <h2 ref={ref} id={id} className={`split-heading ${inView ? 'is-in' : ''} ${className}`}>
-      {words.map((word, index) => (
-        <Fragment key={`${index}-${word}`}>
-          {index > 0 ? ' ' : null}
-          <span className="split-mask">
-            <span className="split-word" style={{ '--i': index } as CSSProperties}>
-              {word}
-            </span>
-          </span>
-        </Fragment>
-      ))}
+      <SplitWords text={text} />
     </h2>
   )
 }

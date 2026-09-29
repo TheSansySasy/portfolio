@@ -6,7 +6,7 @@ import { Section } from '../ui/Section'
 
 export function Contact() {
   return (
-    <Section {...SECTION_META.contact}>
+    <Section {...SECTION_META.contact} particles>
       <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
         <div className="md:col-span-7">
           <p className="type-lede">{CONTACT.availability}</p>

@@ -1,5 +1,5 @@
 import { OPS, SECTION_META } from '../content/data/site'
-import { AlwaysOnTopology } from '../diagrams/AlwaysOnTopology'
+import { FailoverSim } from '../sims/FailoverSim'
 import { Section } from '../ui/Section'
 
 export function Ops() {
@@ -7,7 +7,7 @@ export function Ops() {
     <Section {...SECTION_META.ops}>
       <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
         <div className="md:col-span-7">
-          <AlwaysOnTopology />
+          <FailoverSim />
         </div>
         <div className="md:col-span-5">
           <h3 className="mono-label text-accent-text">The Kerberos morning</h3>

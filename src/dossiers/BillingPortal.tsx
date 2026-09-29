@@ -1,4 +1,5 @@
 import { BillingFlow } from '../diagrams/BillingFlow'
+import { SlabPricingCalc } from '../sims/SlabPricingCalc'
 import { CodeBlock } from '../ui/CodeBlock'
 import { DossierBlock, DossierList, DossierMetrics, DossierStack } from './DossierShell'
 
@@ -77,6 +78,14 @@ export function BillingPortal() {
             { code: ' LIMIT 1;', note: 'Latest slab that was in force, never the newest overall' },
           ]}
         />
+      </DossierBlock>
+
+      <DossierBlock label="Try it" heading="Price a month the way the portal does">
+        <p>
+          Pick a month and a volume. The rate comes from the slab in force that month, and the
+          quantity picks the tier inside it.
+        </p>
+        <SlabPricingCalc />
       </DossierBlock>
 
       <DossierBlock label="Outcome">

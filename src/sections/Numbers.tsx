@@ -3,6 +3,7 @@ import { SECTION_META } from '../content/data/site'
 import { CountUp } from '../effects/CountUp'
 import { MagnetField } from '../effects/MagnetField'
 import { Section } from '../ui/Section'
+import { HeatMapCalendar } from '../viz/HeatMapCalendar'
 
 export function Numbers() {
   return (
@@ -26,6 +27,13 @@ export function Numbers() {
       <p className="mono-label mt-6 text-muted">
         Every figure here also appears on the resume. Nothing rounded up.
       </p>
+
+      <div className="mt-16">
+        <h3 className="mono-label text-accent-text">2026, one square a day</h3>
+        <div className="mt-4">
+          <HeatMapCalendar />
+        </div>
+      </div>
     </Section>
   )
 }
