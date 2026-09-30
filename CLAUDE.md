@@ -93,6 +93,21 @@ Every effect is static under `prefers-reduced-motion`, and content must still re
 - `CodeBlock` puts each margin note **under its line** whenever any line in the block is longer than 52 characters, because at the dossier's width a longer line beside a note needed its own sideways scrollbar.
 - The GitHub profile README is drafted at `docs/github-profile/README.md`; it is published to `TheSansySasy/TheSansySasy` at launch, not before.
 
+## Showcase repositories (Phase 5a)
+
+**Decided 2026-10-01:** the showcase repos are **clean-room reference implementations**, written from scratch with no EBT code, and Sanskar reviews each one before anything is made public. They live in `showcase/<repo>/`, which the portfolio's `.gitignore` excludes; each is its own git repo with the same no-reply identity, committed locally and **not pushed**. Creating the GitHub repos and pushing is an outward action that waits for his go; link them from the dossiers and footer only once they are public.
+
+| Repo | State | Checks |
+|---|---|---|
+| `docflow-extract` | Built. FastAPI, pluggable Gemini and Claude providers plus a fake, validation before delivery, one documents table for pages, rows, tokens and cost, stubbed SharePoint, SFTP and Business Central connectors (BC payload mapping implemented) | `uv run pytest` (14 pass), `uv run ruff check`, smoke-tested end to end. Docker Compose written but not run: no Docker on this machine |
+| `azure-sql-ag-runbook` | Built. Bicep (two zonal SQL 2022 VMs, internal LB with floating IP and probe 59999, cloud witness storage), build and failover docs, the Kerberos and CAU guide, monitoring notes, three PowerShell scripts | `bicep build` and `bicep lint` clean (Bicep CLI 0.47 installed via `az bicep install`); scripts parse and their decision logic passes in Windows PowerShell 5.1. The Pester 5 suite runs in its CI, since only Pester 3.4 is installed here. Never deployed |
+| `d365-fo-extension-patterns` | Waits for Sanskar's own X++ code; not to be written clean-room, since it would stand for his learning |
+
+The downloadable runbooks (Copilot rollout, Always On) wait for **his own documents**, which he chose to share for sanitising (2026-10-01).
+
+- `uv` creates each Python repo's `.venv` inside `showcase/`; use `uv run` from the repo folder, and `cd` back to `C:MyWebsite` afterwards (the Bash tool keeps the directory).
+- In the Python repo, usage months are UTC calendar months; a smoke test on 1 October in Delhi was still September in UTC.
+
 ## Gotchas found the hard way
 
 - **A `cd` in the Bash tool moves the working directory for every later call, PowerShell included.** On 2026-09-15 a `cd` into a package inside `node_modules` made the next `pnpm add` install into that package and register it in the project lockfile as a fake importer. Use absolute paths, or start PowerShell commands with `Set-Location C:\MyWebsite`, and check `package.json` after any install.
