@@ -97,6 +97,14 @@ export function LanyardBadge() {
             </Fallback>
           </div>
         ) : null}
+        {live ? (
+          <p
+            aria-hidden="true"
+            className="mono-label pointer-events-none absolute inset-x-0 bottom-0 text-center text-muted"
+          >
+            Drag to swing · click to flip
+          </p>
+        ) : null}
       </div>
     </div>
   )

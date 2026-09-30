@@ -8,6 +8,8 @@
  * - Physics is a small Verlet rope (ropePhysics.ts) instead of the Rapier
  *   engine, whose WASM made the chunk about 1.1 MB compressed. Same topology:
  *   a fixed anchor, three rope segments, the card hung 1.45 below the last.
+ * - A click turns the card over, and it rests on either face, so the QR code
+ *   on the back can be scanned. The original always swung back to the front.
  * - The badge faces, holographic foil and strap print are drawn at runtime from
  *   the theme tokens (badgeArt.ts), so both themes match the site and no images
  *   ship. The model's embedded 2.3 MB texture was stripped (2.4 MB to 139 KB).
@@ -33,7 +35,7 @@ import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js'
 import type { ThemeTokens } from '../../lib/useThemeTokens'
 import { paintCardAtlas, paintStrap, paintSurfaceAtlas, STRAP_H, STRAP_W } from './badgeArt'
 import cardUrl from './card.glb?url'
-import { cardQuaternion, clampTarget, createRope, stepRope, type Rope } from './ropePhysics'
+import { cardQuaternion, clampTarget, createRope, flipCard, stepRope, type Rope } from './ropePhysics'
 
 extend({ MeshLineGeometry, MeshLineMaterial })
 
@@ -183,6 +185,7 @@ function Band({
   const [held, hold] = useState<THREE.Vector3 | null>(null)
   const [hovered, hover] = useState(false)
   const holdPlane = useRef(0)
+  const pressedAt = useRef({ x: 0, y: 0, time: 0 })
   const invalidate = useThree((state) => state.invalidate)
 
   const gltf = useLoader(GLTFLoader, cardUrl) as GLTF
@@ -259,11 +262,25 @@ function Band({
           onPointerOver={() => hover(true)}
           onPointerOut={() => hover(false)}
           onPointerUp={(event: ThreeEvent<PointerEvent>) => {
+            // The card is double-sided, so a ray hits both faces and handlers
+            // run once per hit; without this a click flipped the card twice.
+            event.stopPropagation()
             ;(event.target as Element).releasePointerCapture(event.pointerId)
             hold(null)
+            // A press that barely moved is a click: turn the card over.
+            const press = pressedAt.current
+            const travel = Math.hypot(event.nativeEvent.clientX - press.x, event.nativeEvent.clientY - press.y)
+            if (travel < 6 && event.nativeEvent.timeStamp - press.time < 400) flipCard(getRope())
+            invalidate()
           }}
           onPointerDown={(event: ThreeEvent<PointerEvent>) => {
+            event.stopPropagation()
             ;(event.target as Element).setPointerCapture(event.pointerId)
+            pressedAt.current = {
+              x: event.nativeEvent.clientX,
+              y: event.nativeEvent.clientY,
+              time: event.nativeEvent.timeStamp,
+            }
             const card = getRope().pos[4]
             holdPlane.current = card.z
             hold(event.point.clone().sub(card))

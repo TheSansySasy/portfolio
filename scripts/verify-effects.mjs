@@ -416,6 +416,34 @@ try {
   await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 200, y: grab.y })
   lanyard.secondsToRestAfterDrag = await waitForQuiet(cdp, '__draws', 20_000)
   lanyard.cursorAfter = await evaluate(cdp, `return document.body.style.cursor`)
+
+  // A click turns the card over, and it stays over. Compared on screenshots of
+  // the card at rest, since the WebGL canvas cannot be read back.
+  const cardClip = await evaluate(
+    cdp,
+    `const r = document.querySelector('[data-lanyard] canvas').getBoundingClientRect();
+     return { x: r.left + scrollX, y: r.top + scrollY + 200, width: r.width, height: r.height - 200, scale: 1 }`,
+  )
+  const cardShot = async () => (await cdp.send('Page.captureScreenshot', { format: 'png', clip: cardClip })).data
+  const clickCard = async () => {
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: grab.x, y: grab.y })
+    await sleep(80)
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: grab.x, y: grab.y, button: 'left', buttons: 1, clickCount: 1 })
+    await sleep(90)
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: grab.x, y: grab.y, button: 'left', buttons: 0, clickCount: 1 })
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 200, y: grab.y })
+    return waitForQuiet(cdp, '__draws', 15_000)
+  }
+  const front = await cardShot()
+  lanyard.secondsToFlip = await clickCard()
+  const back = await cardShot()
+  await sleep(2000)
+  lanyard.flipShowsOtherFace = back !== front
+  lanyard.staysFlipped = (await cardShot()) === back
+  await shot(cdp, '05f2-desktop-dark-lanyard-back')
+  await clickCard()
+  lanyard.secondClickLeavesBack = (await cardShot()) !== back
+  lanyard.hint = await evaluate(cdp, `return [...document.querySelectorAll('#about p.mono-label')].map(p => p.textContent).find(t => /flip/.test(t)) ?? null`)
   report.desktopLanyard = lanyard
 
   // ---- Contact particle heading ------------------------------------------------

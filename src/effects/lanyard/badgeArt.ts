@@ -42,8 +42,30 @@ export function loadBadgeFonts(): Promise<unknown> {
   return Promise.all([
     document.fonts.load(`800 100px ${DISPLAY}`, 'SANSKAR RAI'),
     document.fonts.load(`500 24px ${MONO}`, '@SansySasy'),
-    document.fonts.load(`700 24px ${MONO}`, 'SANSYSASY'),
+    document.fonts.load(`800 24px ${MONO}`, 'SANSYSASY'),
   ]).catch(() => undefined)
+}
+
+function parseHex(hex: string): number[] | null {
+  const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim())
+  if (!m) return null
+  const digits = m[1].length === 3 ? [...m[1]].map((d) => d + d).join('') : m[1]
+  return [0, 2, 4].map((i) => parseInt(digits.slice(i, i + 2), 16))
+}
+
+/**
+ * On the light card, thin grey type fades into the white under texture
+ * filtering and the room's light, so its labels are drawn darker (70% of the
+ * way from muted to text) and heavier. The dark card keeps the muted token.
+ */
+function labelInk(tokens: ThemeTokens): { color: string; bold: boolean } {
+  const surface = parseHex(tokens.surface)
+  const light = surface ? (surface[0] + surface[1] + surface[2]) / 3 > 128 : false
+  const text = parseHex(tokens.text)
+  const muted = parseHex(tokens.muted)
+  if (!light || !text || !muted) return { color: tokens.muted, bold: false }
+  const mixed = muted.map((channel, i) => Math.round(channel * 0.3 + text[i] * 0.7))
+  return { color: `rgb(${mixed.join(', ')})`, bold: true }
 }
 
 function mono(ctx: CanvasRenderingContext2D, size: number, weight = 500) {
@@ -120,8 +142,9 @@ export function drawFront(ctx: CanvasRenderingContext2D, tokens: ThemeTokens) {
 
   ctx.fillStyle = tokens.text
   gridMark(ctx, MARGIN, 128, 7.4)
-  ctx.fillStyle = tokens.muted
-  mono(ctx, 25)
+  const label = labelInk(tokens)
+  ctx.fillStyle = label.color
+  mono(ctx, 25, label.bold ? 800 : 500)
   ctx.textAlign = 'right'
   ctx.textBaseline = 'alphabetic'
   ctx.fillText('ID · 01', FACE_W - MARGIN + 3, 163)
@@ -133,14 +156,14 @@ export function drawFront(ctx: CanvasRenderingContext2D, tokens: ThemeTokens) {
   ctx.fillText('SANSKAR', MARGIN - 4, 430)
   ctx.fillText('RAI', MARGIN - 4, 430 + size * 0.92)
 
-  mono(ctx, 34, 600)
+  mono(ctx, 34, label.bold ? 800 : 600)
   ctx.fillStyle = tokens.accentText
   ctx.fillText('@SANSYSASY', MARGIN, 430 + size * 0.92 + 86)
 
   ctx.fillStyle = tokens.line
   ctx.fillRect(MARGIN, 700, FACE_W - MARGIN * 2, 3)
-  mono(ctx, 24, 600)
-  ctx.fillStyle = tokens.muted
+  mono(ctx, 24, label.bold ? 800 : 600)
+  ctx.fillStyle = label.color
   ctx.fillText('PYTHON · CLOUD · D365 INTEGRATION', MARGIN, 752)
   ctx.fillText('MB-310 CERTIFIED', MARGIN, 796)
 
@@ -167,7 +190,7 @@ function roundel(ctx: CanvasRenderingContext2D, tokens: ThemeTokens) {
   // Ring text, one glyph at a time around the band between the circles.
   mono(ctx, 22, 700)
   ctx.letterSpacing = '0px'
-  ctx.fillStyle = tokens.muted
+  ctx.fillStyle = labelInk(tokens).color
   ctx.textBaseline = 'middle'
   const text = 'SANSKAR RAI · SANSYSASY · SANSKAR RAI · SANSYSASY · '
   const radius = (outer + inner) / 2
@@ -211,8 +234,9 @@ export function drawBack(ctx: CanvasRenderingContext2D, tokens: ThemeTokens, url
   roundel(ctx, tokens)
   qrCode(ctx, url)
 
-  mono(ctx, 23, 600)
-  ctx.fillStyle = tokens.muted
+  const label = labelInk(tokens)
+  mono(ctx, 23, label.bold ? 800 : 600)
+  ctx.fillStyle = label.color
   ctx.textAlign = 'center'
   ctx.fillText('LINKEDIN · SCAN TO CONNECT', FACE_W / 2, 922)
   ctx.textAlign = 'left'
