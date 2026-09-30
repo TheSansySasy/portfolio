@@ -8,7 +8,7 @@ Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), a Python engin
 
 **Positioning rule (corrected 2026-09-14): never describe him as a D365 F&O consultant.** Tectura was functional training that earned MB-310; X++ and the thirteen extension modules are self-study; MB-500 is targeted for November 2026. The Copilot rollout was a real engagement. The role line is `Python Engineer · Cloud & DevOps · Dynamics 365 Integration`.
 
-**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. Phase 3 (effects) was merged to `main` on 2026-09-16 (PR #4). **Phase 4 (heavy and custom effects) was started on Sanskar's go on 2026-09-30 and is built on the branch `phase-4-heavy`; it merges only when he approves the badge design and says so. Phase 5 must not start without his go.** LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
+**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. Phase 3 (effects) was merged to `main` on 2026-09-16 (PR #4). **Phase 4 (heavy and custom effects) was merged to `main` on 2026-09-30 (PR #5), after he approved the badge design. Phase 5 must not be started without Sanskar saying so.** LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
 
 ## Commands
 
