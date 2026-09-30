@@ -33,7 +33,7 @@ export const WORK: WorkCard[] = [
     title: 'SQL Server Always On, and a Kerberos failure',
     outcome: 'Root cause traced to an offline cluster resource group',
     lens: ['Cloud'],
-    written: false,
+    written: true,
   },
   {
     slug: 'retail-erp-deployment',
@@ -41,7 +41,7 @@ export const WORK: WorkCard[] = [
     title: 'Deploying a retail ERP on a locked-down VPS',
     outcome: 'Shipped despite blocked outbound ports',
     lens: ['Cloud'],
-    written: false,
+    written: true,
   },
   {
     slug: 'gcp-to-azure-migration',
@@ -49,7 +49,7 @@ export const WORK: WorkCard[] = [
     title: 'GCP to Azure migration and CI/CD',
     outcome: '60% faster deploys, 99.9% uptime',
     lens: ['Cloud'],
-    written: false,
+    written: true,
   },
   {
     slug: 'd365-fo-extensions',
@@ -57,6 +57,6 @@ export const WORK: WorkCard[] = [
     title: 'Learning F&O development, and a Copilot rollout',
     outcome: 'Thirteen modules of extensions on my own time; Copilot enabled on a client environment',
     lens: ['D365'],
-    written: false,
+    written: true,
   },
 ]
