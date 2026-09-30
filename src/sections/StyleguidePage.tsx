@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { HEADLINES, SITE } from '../content/data/site'
+import { BadgeArtPreview } from '../effects/lanyard/BadgeArtPreview'
 import { Button, ButtonLink } from '../ui/Button'
 import { Chip } from '../ui/Chip'
 import { Container } from '../ui/Container'
@@ -192,6 +193,14 @@ export function StyleguidePage() {
             A two-node Always On cluster, a Kerberos failure traced to an offline cluster resource,
             and the alerting designed after it.
           </p>
+        </Block>
+
+        <Block index="08" title="Lanyard badge">
+          <p className="mb-8 max-w-2xl text-muted">
+            The artwork the 3D badge in About is textured with, laid flat. Toggle the theme to see
+            the other set. On the card, the foil areas are polished metal with a thin-film sheen.
+          </p>
+          <BadgeArtPreview />
         </Block>
 
         <footer className="border-t border-line py-10">

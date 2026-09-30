@@ -295,6 +295,78 @@
     opacity: 1;
   }
 
+  /* Contact heading (ParticleHeading). The canvas overhangs the heading by the
+     component's BLEED so scattered squares are not clipped. The words turn
+     transparent only after the canvas has drawn them. */
+  .particle-canvas {
+    position: absolute;
+    left: -48px;
+    top: -48px;
+    pointer-events: none;
+  }
+
+  [data-particles='live'] .split-word {
+    color: transparent;
+  }
+
+  @media (forced-colors: active) {
+    .particle-canvas {
+      display: none;
+    }
+  }
+
+  /* About lanyard (effects/lanyard). The slot keeps its height whether the
+     static badge or the canvas is showing. The canvas reaches 8rem above the
+     column so the strap can come in from above, and its height is what
+     CAMERA_Z in Lanyard.tsx is tuned against. */
+  .lanyard-slot {
+    min-height: 40rem;
+  }
+
+  .lanyard-canvas {
+    position: absolute;
+    inset-inline: 0;
+    top: -8rem;
+    height: 48rem;
+    /* The strap fades in rather than starting at a hard edge. */
+    mask-image: linear-gradient(to bottom, transparent, #000 6rem);
+  }
+
+  /* FailoverSim: a heartbeat ring on every live node, and dashes flowing from
+     the primary to the secondary while it replicates. Both stop under reduced
+     motion; the sequence of states still plays. */
+  .sim-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: sim-pulse 1.6s ease-out infinite;
+  }
+
+  .sim-flow {
+    stroke-dasharray: 6 8;
+    animation: sim-flow 900ms linear infinite;
+  }
+
+  .sim-flow-reverse {
+    animation-direction: reverse;
+  }
+
+  @keyframes sim-pulse {
+    from {
+      scale: 1;
+      opacity: 0.9;
+    }
+    to {
+      scale: 3;
+      opacity: 0;
+    }
+  }
+
+  @keyframes sim-flow {
+    to {
+      stroke-dashoffset: -14;
+    }
+  }
+
   /* Scroll reveal (Reveal.tsx). Hidden only once main.tsx marks the document. */
   .reveal-ready .reveal {
     opacity: 0;
@@ -345,6 +417,14 @@
 
     .spotlight::before {
       display: none;
+    }
+
+    .sim-pulse {
+      display: none;
+    }
+
+    .sim-flow {
+      animation: none;
     }
   }
 }

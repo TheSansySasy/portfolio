@@ -1,4 +1,5 @@
 import { DocPipeline } from '../diagrams/DocPipeline'
+import { TokenCostCalc } from '../sims/TokenCostCalc'
 import { CodeBlock } from '../ui/CodeBlock'
 import { DossierBlock, DossierList, DossierMetrics, DossierStack } from './DossierShell'
 
@@ -73,6 +74,14 @@ export function AiDocumentPlatform() {
             { code: '    return result' },
           ]}
         />
+      </DossierBlock>
+
+      <DossierBlock label="Try it" heading="What a month of documents costs">
+        <p>
+          The same sum the platform runs per document, one level up. Change the volume or the
+          prices and every figure follows.
+        </p>
+        <TokenCostCalc />
       </DossierBlock>
 
       <DossierBlock label="Outcome">

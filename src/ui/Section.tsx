@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Reveal } from '../effects/Reveal'
+import { ParticleHeading } from '../effects/ParticleHeading'
 import { SplitHeading } from '../effects/SplitHeading'
 import { Container } from './Container'
 import { SectionLabel } from './SectionLabel'
@@ -10,6 +11,7 @@ export function Section({
   label,
   heading,
   lede,
+  particles = false,
   children,
 }: {
   id: string
@@ -17,17 +19,27 @@ export function Section({
   label: string
   heading?: string
   lede?: string
+  /** Contact only: the heading becomes the particle field. */
+  particles?: boolean
   children?: ReactNode
 }) {
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className="scroll-mt-24 py-20 md:py-28">
       <Container>
         <SectionLabel index={index} label={label} />
-        <SplitHeading
-          id={`${id}-heading`}
-          text={heading ?? label}
-          className="type-section mt-8 max-w-4xl"
-        />
+        {particles ? (
+          <ParticleHeading
+            id={`${id}-heading`}
+            text={heading ?? label}
+            className="type-section mt-8 max-w-4xl"
+          />
+        ) : (
+          <SplitHeading
+            id={`${id}-heading`}
+            text={heading ?? label}
+            className="type-section mt-8 max-w-4xl"
+          />
+        )}
         {lede ? (
           <Reveal className="mt-6">
             <p className="type-lede max-w-2xl text-muted">{lede}</p>

@@ -22,6 +22,9 @@
  * - Overlay restyled to the site's type, the external-link button removed, and
  *   canvas plus overlay hidden from assistive tech, because the full stack list
  *   is rendered beside it.
+ * - Zoomed out to twice the original's field of view, so four or five tools
+ *   show at once instead of one (asked for on 2026-09-30), with a gentler
+ *   pull-back while dragging to match.
  * - Parameter properties rewritten as fields (erasableSyntaxOnly), unused
  *   uniforms dropped, and a missing WebGL 2 context reported to the caller.
  */
@@ -534,6 +537,10 @@ class SphereEngine {
   public readonly maxTextureSize: number
 
   private readonly SPHERE_RADIUS = 2
+  // Half the view's height at rest, as a share of the sphere's radius. The
+  // original's 0.35 filled this wide band with a single tile; 0.7 shows the
+  // facing tool with its neighbours around it.
+  private readonly VIEW_HEIGHT = 0.7
   private readonly TARGET_FRAME_DURATION = 1000 / 60
   private readonly camera: Camera = {
     matrix: mat4.create(),
@@ -782,7 +789,7 @@ class SphereEngine {
   private updateProjectionMatrix(): void {
     const canvasEl = this.gl.canvas as HTMLCanvasElement
     this.camera.aspect = canvasEl.clientWidth / Math.max(1, canvasEl.clientHeight)
-    const height = this.SPHERE_RADIUS * 0.35
+    const height = this.SPHERE_RADIUS * this.VIEW_HEIGHT
     const distance = this.camera.position[2]
     if (this.camera.aspect > 1) {
       this.camera.fov = 2 * Math.atan(height / distance)
@@ -818,7 +825,9 @@ class SphereEngine {
         this.getVertexWorldPosition(nearestVertexIndex),
       )
     } else {
-      cameraTargetZ += this.control.rotationVelocity * 80 + 2.5
+      // Pulls back while dragging. The original's 80x and 2.5 suited its close
+      // view; at twice the field of view they shrank every tile to a speck.
+      cameraTargetZ += this.control.rotationVelocity * 30 + 0.8
       damping = 7 / timeScale
     }
 

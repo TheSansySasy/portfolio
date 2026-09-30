@@ -12,7 +12,9 @@
         --text: #111;
         --muted: #5f5f5a;
         --line: #d9d7d0;
-        --accent-text: #c9450f;
+        --accent: #ea5f18;
+        --accent-text: #bd3e0c;
+        --glitch-opacity: 0.16;
         color-scheme: light dark;
         font: 17px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
         color: var(--text);
@@ -24,7 +26,9 @@
           --text: #f2f2f0;
           --muted: #9b9b9b;
           --line: #262629;
+          --accent: #ff6f37;
           --accent-text: #ff8a5b;
+          --glitch-opacity: 0.22;
         }
       }
       body {
@@ -37,6 +41,21 @@
         flex-direction: column;
         justify-content: center;
         gap: 12px;
+      }
+      /* Letter glitch: decorative, behind everything, clearest where the text is. */
+      canvas {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        opacity: var(--glitch-opacity);
+        mask-image: radial-gradient(ellipse 70% 60% at 30% 50%, transparent 25%, #000 80%);
+      }
+      @media (forced-colors: active) {
+        canvas {
+          display: none;
+        }
       }
       .label {
         font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
@@ -67,10 +86,88 @@
     </style>
   </head>
   <body>
+    <canvas aria-hidden="true"></canvas>
     <p class="label">404 / NOT FOUND</p>
     <h1>Page not found</h1>
     <p class="note">
       SansySasy hasn't built this one yet. <a href="/">Back to the start</a>.
     </p>
+    <script>
+      // A field of monospace characters, a few of which change every tick, in
+      // the spirit of React Bits' "Letter Glitch" (written from scratch here, as
+      // this page is plain HTML). Only changed cells are redrawn; it pauses in a
+      // background tab, and draws once and stops under reduced motion.
+      ;(() => {
+        const canvas = document.querySelector('canvas')
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return
+        const CHARS = 'SANSYSASY0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*+-/<>=?@[]{}'
+        const CELL_W = 11
+        const CELL_H = 20
+        const TICK_MS = 80
+        const SHARE = 0.04
+        const still = matchMedia('(prefers-reduced-motion: reduce)')
+        let cols = 0
+        let rows = 0
+        let palette = []
+        let timer = 0
+
+        const pick = (list) => list[Math.floor(Math.random() * list.length)]
+
+        function readPalette() {
+          const style = getComputedStyle(document.documentElement)
+          const token = (name) => style.getPropertyValue(name).trim()
+          // Mostly the muted grey, with the occasional accent.
+          palette = [token('--muted'), token('--muted'), token('--muted'), token('--text'), token('--accent')]
+        }
+
+        function drawCell(col, row) {
+          const x = col * CELL_W
+          const y = row * CELL_H
+          ctx.clearRect(x, y, CELL_W, CELL_H)
+          ctx.fillStyle = pick(palette)
+          ctx.fillText(pick(CHARS), x + 1, y + CELL_H - 5)
+        }
+
+        function layout() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2)
+          canvas.width = Math.round(innerWidth * dpr)
+          canvas.height = Math.round(innerHeight * dpr)
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+          ctx.font = '500 15px ui-monospace, "Cascadia Code", Consolas, monospace'
+          cols = Math.ceil(innerWidth / CELL_W)
+          rows = Math.ceil(innerHeight / CELL_H)
+          for (let row = 0; row < rows; row++) for (let col = 0; col < cols; col++) drawCell(col, row)
+        }
+
+        function tick() {
+          const count = Math.ceil(cols * rows * SHARE)
+          for (let i = 0; i < count; i++) {
+            drawCell(Math.floor(Math.random() * cols), Math.floor(Math.random() * rows))
+          }
+        }
+
+        function run() {
+          clearInterval(timer)
+          timer = 0
+          if (!still.matches && !document.hidden) timer = setInterval(tick, TICK_MS)
+        }
+
+        readPalette()
+        layout()
+        run()
+        let resizeFrame = 0
+        addEventListener('resize', () => {
+          cancelAnimationFrame(resizeFrame)
+          resizeFrame = requestAnimationFrame(layout)
+        })
+        document.addEventListener('visibilitychange', run)
+        still.addEventListener('change', run)
+        matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          readPalette()
+          layout()
+        })
+      })()
+    </script>
   </body>
 </html>
