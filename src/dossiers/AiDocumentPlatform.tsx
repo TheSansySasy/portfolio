@@ -1,7 +1,9 @@
+import { REPOS } from '../content/data/repos'
 import { DocPipeline } from '../diagrams/DocPipeline'
 import { ExtractionExample } from '../sims/ExtractionExample'
 import { TokenCostCalc } from '../sims/TokenCostCalc'
 import { CodeBlock } from '../ui/CodeBlock'
+import { RepoCard } from '../ui/RepoCard'
 import { DossierBlock, DossierList, DossierMetrics, DossierStack } from './DossierShell'
 
 export function AiDocumentPlatform() {
@@ -105,6 +107,14 @@ export function AiDocumentPlatform() {
           Production and UAT combined, across five products. Because every document carries its own
           status and cost, invoicing is a query rather than a reconciliation exercise.
         </p>
+      </DossierBlock>
+
+      <DossierBlock label="Code" heading="The pattern, in a repository">
+        <p>
+          The platform itself belongs to my employer, so it cannot be shown. This is the same
+          shape written fresh, small enough to read in one sitting, with tests.
+        </p>
+        <RepoCard repo={REPOS.docflow} />
       </DossierBlock>
 
       <DossierBlock label="Stack">
