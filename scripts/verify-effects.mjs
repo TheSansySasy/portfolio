@@ -516,6 +516,26 @@ try {
   await shot(cdp, '06a-desktop-dark-token-calc')
   report.desktopTokenCalc = tokenCalc
 
+  // Worked extraction example: a clean read is delivered, a misread total is held.
+  stage = 'desktop dark: extraction example'
+  const EXAMPLE = `const d = document.querySelector('[role=dialog]');
+    const box = [...d.querySelectorAll('button')].find(b => b.textContent === 'Read correctly').closest('.rounded-lg');
+    return {
+      pressed: [...box.querySelectorAll('button[aria-pressed="true"]')].map(b => b.textContent),
+      total: JSON.parse(box.querySelector('pre code').textContent).total,
+      checks: [...box.querySelectorAll('ul li')].map(li => li.textContent),
+      verdict: box.querySelector('p.border-l-2').textContent,
+      cost: [...box.querySelectorAll('dd')].pop().textContent,
+    }`
+  const example = { clean: await evaluate(cdp, EXAMPLE) }
+  await evaluate(cdp, `[...document.querySelectorAll('[role=dialog] button')].find(b => b.textContent === 'One digit misread').click(); return true`)
+  await sleep(150)
+  example.misread = await evaluate(cdp, EXAMPLE)
+  await evaluate(cdp, `[...document.querySelectorAll('[role=dialog] button')].find(b => b.textContent === 'One digit misread').scrollIntoView({ block: 'start' }); return true`)
+  await sleep(300)
+  await shot(cdp, '06a2-desktop-dark-extraction-example')
+  report.desktopExtractionExample = example
+
   await evaluate(
     cdp,
     `document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); return true`,
@@ -552,6 +572,35 @@ try {
     `document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); return true`,
   )
   await sleep(600)
+
+  // Runbook downloads: every link in the two dossiers that carry them resolves to a PDF.
+  stage = 'desktop dark: runbook downloads'
+  const runbooks = {}
+  for (const slug of ['d365-fo-extensions', 'gcp-to-azure-migration']) {
+    await evaluate(cdp, `location.hash = '#work/${slug}'; return true`)
+    await sleep(900)
+    runbooks[slug] = await evaluate(
+      cdp,
+      `const links = [...document.querySelectorAll('[role=dialog] a[download]')];
+       return Promise.all(links.map(async (a) => {
+         const response = await fetch(a.href);
+         const head = new Uint8Array(await response.clone().arrayBuffer()).slice(0, 5);
+         return {
+           name: a.getAttribute('aria-label'),
+           file: a.getAttribute('href'),
+           status: response.status,
+           isPdf: String.fromCharCode(...head) === '%PDF-',
+           kb: Math.round((await response.arrayBuffer()).byteLength / 1024),
+         }
+       }))`,
+    )
+    await evaluate(
+      cdp,
+      `document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); return true`,
+    )
+    await sleep(500)
+  }
+  report.desktopRunbooks = runbooks
 
   // In-page link: smooth scroll lands under the nav and moves focus.
   stage = 'desktop dark: in-page link'

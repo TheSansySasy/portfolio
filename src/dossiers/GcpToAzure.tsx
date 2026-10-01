@@ -1,5 +1,7 @@
 import { FlowDiagram } from '../diagrams/FlowDiagram'
+import { RUNBOOKS } from '../content/data/runbooks'
 import { CodeBlock } from '../ui/CodeBlock'
+import { RunbookList } from '../ui/RunbookList'
 import { DossierBlock, DossierList, DossierMetrics, DossierStack } from './DossierShell'
 
 function Migration() {
@@ -111,6 +113,14 @@ export function GcpToAzure() {
             { code: 'pm2 reload ecosystem.config.js', note: 'What each deployment runs: reload, not stop and start' },
           ]}
         />
+      </DossierBlock>
+
+      <DossierBlock label="Runbook" heading="Scaling without a person in the loop">
+        <p>
+          A document from my Azure work: an App Service plan that moves up a tier when it is
+          busy and back down when it is not, with client details taken out.
+        </p>
+        <RunbookList items={[RUNBOOKS.appServiceScaling]} />
       </DossierBlock>
 
       <DossierBlock label="Outcome">

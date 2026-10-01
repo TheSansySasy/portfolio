@@ -1,4 +1,5 @@
 import { DocPipeline } from '../diagrams/DocPipeline'
+import { ExtractionExample } from '../sims/ExtractionExample'
 import { TokenCostCalc } from '../sims/TokenCostCalc'
 import { CodeBlock } from '../ui/CodeBlock'
 import { DossierBlock, DossierList, DossierMetrics, DossierStack } from './DossierShell'
@@ -74,6 +75,14 @@ export function AiDocumentPlatform() {
             { code: '    return result' },
           ]}
         />
+      </DossierBlock>
+
+      <DossierBlock label="Worked example" heading="One invoice, start to finish">
+        <p>
+          The same four steps the platform runs for every document, on an invoice I made up.
+          Switch to the second case to see what happens when the model misreads a single digit.
+        </p>
+        <ExtractionExample />
       </DossierBlock>
 
       <DossierBlock label="Try it" heading="What a month of documents costs">

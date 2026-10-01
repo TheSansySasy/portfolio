@@ -8,7 +8,9 @@ Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), a Python engin
 
 **Positioning rule (corrected 2026-09-14): never describe him as a D365 F&O consultant.** Tectura was functional training that earned MB-310; X++ and the thirteen extension modules are self-study; MB-500 is targeted for November 2026. The Copilot rollout was a real engagement. The role line is `Python Engineer · Cloud & DevOps · Dynamics 365 Integration`.
 
-**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. Phase 3 (effects) was merged to `main` on 2026-09-16 (PR #4). Phase 4 (heavy and custom effects) was merged to `main` on 2026-09-30 (PR #5), after he approved the badge design. **Phase 5a (repos and dossiers) was started on his go on 2026-10-01; its dossiers (3 to 6) were merged to `main` the same day (PR #6).** Phase 5a is not finished: Sanskar will review the two clean-room showcase repos later, and the X++ repo and the runbook downloads wait on his own material (below). Do not publish the repos, and do not start Phase 5b, without his say. Phase 5b (the `api/` service, the live demo, recordings) needs VPS access, an LLM key with a spend limit and an F&O dev VM, and must not start without his go. LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
+**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. Phase 3 (effects) was merged to `main` on 2026-09-16 (PR #4). Phase 4 (heavy and custom effects) was merged to `main` on 2026-09-30 (PR #5), after he approved the badge design. **Phase 5a (repos, dossiers and downloads) was started on his go on 2026-10-01; its dossiers (3 to 6) were merged to `main` the same day (PR #6).** Still open in 5a: his review of the two clean-room showcase repos before they are published, and of the sanitised runbooks before they are linked. **Phase 5b is cancelled** (see the cost rule below). After 5a comes launch (Phase 6), on his go.
+
+**Cost rule (decided 2026-10-01): nothing that costs money to keep running.** Sanskar will not maintain a VPS, a paid AI API key or an F&O development VM for a portfolio. So: no `api/` service, no live demo, no contact form backend, no recorded walkthroughs, no status page. The site is fully static on Cloudflare's free plan, contact is an email link, and anything proposed later has to fit that. Do not suggest features that need a server, a key or a VM. LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
 
 ## Commands
 
@@ -19,6 +21,7 @@ pnpm lint                         # oxlint
 pnpm typecheck                    # tsc -b
 pnpm exec wrangler deploy --dry-run   # validate wrangler.jsonc against dist/
 node scripts/render-og.mjs        # re-render public/og.png after changing the name, role line or palette
+node scripts/render-runbooks.mjs  # re-render public/runbooks/*.pdf after editing runbooks/*.md
 ```
 
 Two pages: `/` is the site, `/styleguide.html` is the unlinked design review page (tokens, type scale, monogram options, headline candidates, components, and the lanyard badge's artwork laid flat in the active theme). Both are Vite entries declared in `vite.config.ts`. On the deployed Worker the styleguide is served at `/styleguide`, since static assets drop the `.html`.
@@ -92,6 +95,15 @@ Every effect is static under `prefers-reduced-motion`, and content must still re
 - New diagrams use `src/diagrams/FlowDiagram.tsx`: boxes, links, notes and dashed groups as data, in the same house style as the hand-drawn Phase 2 diagrams, with a full-sentence `aria-label`. Give a box an `id` when two share a title.
 - `CodeBlock` puts each margin note **under its line** whenever any line in the block is longer than 52 characters, because at the dossier's width a longer line beside a note needed its own sideways scrollbar.
 - The GitHub profile README is drafted at `docs/github-profile/README.md`; it is published to `TheSansySasy/TheSansySasy` at launch, not before.
+- **Worked extraction example** (`src/sims/ExtractionExample.tsx`, AI platform dossier): the free stand-in for the cancelled live demo. A made-up invoice, the JSON extracted from it, the checks, and the recorded cost, all fixed in the page; a second case misreads the total and is held for review. Its sample and its validation message match the `docflow-extract` repo, and its prices match the token calculator.
+
+## Runbooks (Phase 5a)
+
+Three PDF downloads, sanitised from documents Sanskar wrote and shared on 2026-10-01: Copilot enablement and PPAC provisioning with the Unified Developer Experience (D365 dossier), and App Service scale up and down (migration dossier). Sources are Markdown with a small front-matter block in `runbooks/`; `scripts/render-runbooks.mjs` typesets them to A4 through headless Chrome's print-to-PDF with the site's fonts embedded, into `public/runbooks/`. The PDFs are committed, so the Cloudflare build needs no Chrome. `src/content/data/runbooks.ts` lists them (update `pages` after a re-render) and `src/ui/RunbookList.tsx` draws the download cards.
+
+- **The sources are public with the rest of this repo.** They must hold no client name, tenant, address, account, environment name, organisation or environment ID, capacity or licence count, local user path, or screenshot. His originals stay outside the repo. After editing a runbook, grep the working tree for the identifiers in the original before committing, and never write those identifiers into any file here, this one included.
+- What was changed beyond removing identifiers, for him to confirm: the scale-down script's retry loop was rebuilt (the original described one and logged an attempt number, but the pasted code had no loop), and one SKU name's capitalisation was made consistent. The claim that Lifecycle Services is closed to new implementations from January 2026 is his, kept as written.
+- His wizard-generated domain controller script became `scripts/New-AdForest.ps1` in the `azure-sql-ag-runbook` showcase repo, with the domain names as parameters.
 
 ## Showcase repositories (Phase 5a)
 
@@ -101,9 +113,9 @@ Every effect is static under `prefers-reduced-motion`, and content must still re
 |---|---|---|
 | `docflow-extract` | Built. FastAPI, pluggable Gemini and Claude providers plus a fake, validation before delivery, one documents table for pages, rows, tokens and cost, stubbed SharePoint, SFTP and Business Central connectors (BC payload mapping implemented) | `uv run pytest` (14 pass), `uv run ruff check`, smoke-tested end to end. Docker Compose written but not run: no Docker on this machine |
 | `azure-sql-ag-runbook` | Built. Bicep (two zonal SQL 2022 VMs, internal LB with floating IP and probe 59999, cloud witness storage), build and failover docs, the Kerberos and CAU guide, monitoring notes, three PowerShell scripts | `bicep build` and `bicep lint` clean (Bicep CLI 0.47 installed via `az bicep install`); scripts parse and their decision logic passes in Windows PowerShell 5.1. The Pester 5 suite runs in its CI, since only Pester 3.4 is installed here. Never deployed |
-| `d365-fo-extension-patterns` | Waits for Sanskar's own X++ code; not to be written clean-room, since it would stand for his learning |
+| `d365-fo-extension-patterns` | **Optional, not scheduled.** Only if Sanskar wants to publish his own practice code; never written clean-room, since it would stand for his learning, and never built from his training book, which is someone else's material |
 
-The downloadable runbooks (Copilot rollout, Always On) wait for **his own documents**, which he chose to share for sanitising (2026-10-01).
+The downloadable runbooks come from **his own documents**, shared for sanitising on 2026-10-01 (see Runbooks above). There is no separate Always On runbook: that role is filled by the `azure-sql-ag-runbook` repo once it is public.
 
 - `uv` creates each Python repo's `.venv` inside `showcase/`; use `uv run` from the repo folder, and `cd` back to `C:MyWebsite` afterwards (the Bash tool keeps the directory).
 - In the Python repo, usage months are UTC calendar months; a smoke test on 1 October in Delhi was still September in UTC.

@@ -1,6 +1,6 @@
 # Sanskar Rai — Portfolio Website Plan
 
-Status: **PLAN v1.5, 2026-09-30.** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged and live at portfolio.rai-sanskar304.workers.dev, together with the positioning correction of 2026-09-14 (decision 22). Phase 3 (effects) merged 2026-09-16 (PR #4). Phase 4 (heavy and custom) merged 2026-09-30 (PR #5) after Sanskar approved the badge design; section 4 records what was built, decision 24 the choices, and section 9 the measured budgets. **Phase 5a started 2026-10-01 on his go:** dossiers 3 to 6 merged the same day (PR #6); two showcase repositories are built clean-room and await his review before publishing; the X++ repository and the runbooks wait on his material. Phase 5b waits for his go and its prerequisites.
+Status: **PLAN v1.6, 2026-10-01.** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged and live at portfolio.rai-sanskar304.workers.dev, together with the positioning correction of 2026-09-14 (decision 22). Phase 3 (effects) merged 2026-09-16 (PR #4). Phase 4 (heavy and custom) merged 2026-09-30 (PR #5) after Sanskar approved the badge design; section 4 records what was built, decision 24 the choices, and section 9 the measured budgets. **Phase 5a started 2026-10-01 on his go:** dossiers 3 to 6 merged the same day (PR #6); two showcase repositories are built clean-room and await his review before publishing; the X++ repository and the runbooks wait on his material. **Phase 5b is cancelled (decision 25):** nothing that needs a server, a paid API key or a development VM will be built. What remains is the rest of 5a, then launch.
 Remaining open items are in section 15.
 
 ---
@@ -24,7 +24,7 @@ Remaining open items are in section 15.
 | 13 | Site shape | **Single page** with anchor navigation. Case studies are overlays, not routes |
 | 14 | Framework | **Vite + React 19 + TypeScript strict + Tailwind v4**, static output. No server-side rendering |
 | 15 | Case studies | **Overlay dossier**, hash deep-linked |
-| 16 | Extra showcase methods | **Live sanitized demo, recorded X++ walkthroughs, on-page simulations, annotated code walkthroughs.** Plus the defaults: write-ups, repos, downloadable runbooks, a recommendations slot |
+| 16 | Extra showcase methods | ~~Live sanitized demo, recorded X++ walkthroughs,~~ (both cancelled, decision 25) **on-page simulations, annotated code walkthroughs.** Plus the defaults: write-ups, repos, downloadable runbooks, a recommendations slot |
 | 17 | Headline | "I build and run the systems behind the ERP." is live as the default. The final pick waits on Sanskar's proofread; the shortlist stays in section 2 |
 | 18 | Repo name | `portfolio`, at github.com/TheSansySasy/portfolio, public |
 | 19 | LinkedIn URL, credential link, MB-500 date | Supplied 2026-09-14: LinkedIn `thesanskarrai`, MB-310 verified through its Microsoft Learn credential page, MB-500 targeted for November 2026 |
@@ -33,6 +33,7 @@ Remaining open items are in section 15.
 | 22 | Positioning | **Corrected 2026-09-14: not a D365 F&O consultant.** Python engineer in cloud and DevOps, with Business Central integration in production. Tectura was functional training (MB-310); X++ and the thirteen extension modules are self-study; the Copilot rollout was a real engagement. Role line: Python Engineer · Cloud & DevOps · Dynamics 365 Integration |
 | 23 | Phase 3 implementation | **Decided 2026-09-15.** No GSAP and no Motion: reveals and word rises are CSS, grain is a static SVG tile, figures use a small count-up. The only new dependencies are `lenis` and `gl-matrix`. React Bits sources are MIT + Commons Clause and were adapted with their bugs fixed (section 4) |
 | 24 | Phase 4 implementation | **Decided 2026-09-30.** The lanyard keeps React Bits' model and topology but runs on a small Verlet rope instead of Rapier (whose inlined WASM took the chunk to 1.1 MB gzipped) and loads without drei; its chunk is 260 KB gzipped and is fetched only after the visitor's first interaction, on fine-pointer screens at least 1024px wide. Badge art, foil and strap print are drawn at runtime from the theme tokens; the back carries the roundel and a QR code to LinkedIn. The fallback is the static badge, not Tilted Card. The heat map's daily shape is illustrative and labelled so; only its total is a real figure. The calculators use illustrative credit rates and editable example prices. The Open Graph card is rendered from HTML by a script |
+| 25 | Running costs | **Decided 2026-10-01: nothing that costs money to keep running.** Sanskar will not maintain a VPS, a paid AI API key or an F&O development VM for a portfolio. Phase 5b is cancelled: no `api/` service, no live extraction demo, no contact form backend, no recorded X++ walkthroughs, no status page. The site stays fully static on Cloudflare's free plan. In their place: a precomputed worked example in the AI platform dossier, and runbooks sanitised from his own documents as downloads. The showcase repositories run without keys or servers |
 
 ---
 
@@ -127,11 +128,11 @@ Hero background: no WebGL. A faint Swiss crosshair grid at low opacity in both t
 
 **Vite · React 19 · TypeScript strict · Tailwind CSS v4 · adapted React Bits sources · Lenis · gl-matrix (stack sphere) · three, React Three Fiber, meshline and uqr (Lanyard chunk only, Phase 4; drei and Rapier were tried and removed) · Playwright + axe for tests.** GSAP and Motion were removed in Phase 3. Shiki and zod were never needed: annotated code is unhighlighted by design, and content is typed TypeScript.
 
-Why Vite for a single page: with one page and no blog, the reasons for Next.js (static generation per route, per-route metadata, MDX routing) no longer apply. Vite outputs a static folder that any host serves, including Nginx on Sanskar's VPS with no Node process. React Bits' own site is built on Vite. No hydration edge cases for six canvases. Trade-offs accepted: client rendering with full static meta tags (optional prerender later); a blog later means a separate site on a subdomain.
+Why Vite for a single page: with one page and no blog, the reasons for Next.js (static generation per route, per-route metadata, MDX routing) no longer apply. Vite outputs a static folder that any static host serves. React Bits' own site is built on Vite. No hydration edge cases for six canvases. Trade-offs accepted: client rendering with full static meta tags (optional prerender later); a blog later means a separate site on a subdomain.
 
 Rendering rules: every WebGL or canvas component is lazy-imported, mounted when its section is within one viewport, paused or unmounted when it leaves.
 
-Tooling: pnpm · ESLint + Prettier · Husky + lint-staged · GitHub Actions (typecheck, lint, build, Playwright smoke + axe, Lighthouse CI; a separate job deploys `api/` over SSH) · conventional commits.
+Tooling: pnpm · ESLint + Prettier · Husky + lint-staged · GitHub Actions (typecheck, lint, build) · conventional commits.
 
 ### Project structure
 ```
@@ -151,7 +152,6 @@ C:\MyWebsite
     lib/                     theme.ts, motion.ts, hooks (useInView, useReducedMotion, useThemeTokens, useHashRoute)
     styles/globals.css       @theme tokens for both themes, reset
   public/                    models/card.glb, textures/, logos/*.svg, resume/*.pdf, media/*.webm|mp4 + posters, og.png, monogram.svg, 404.html
-  api/                       FastAPI service: contact + demo extraction, Dockerfile, systemd unit, rate limiting, Turnstile
   tests/                     Playwright smoke + axe + visual snapshots (2 themes x 3 breakpoints)
   .github/workflows/ci.yml
   PLAN.md
@@ -181,7 +181,7 @@ C:\MyWebsite
 | 06 | **Operations** | Failover simulation | Heading: *I keep production up.* Interactive Always On topology. Beside it: the Kerberos `KRB_AP_ERR_MODIFIED` story in four sentences, monitoring line (Grafana, Prometheus, Zabbix), alerting and failover design bullets |
 | 07 | **By the numbers** | Magnet Lines band + count-up (heat map in Phase 4) | 26,000+ documents · 5 products · 99.9% uptime · 60% faster deploys · 80% less downtime · 13 vendor defects found · 13 F&O modules. Heat-map calendar labeled *"shape illustrative, totals real"* |
 | 08 | **Certifications** | fade | MB-310 with Credly link, MB-500 in progress with target date, planned Azure certs |
-| 09 | **Contact** | Particle Text + form | `LET'S TALK` in particles. Form: name, email, message, honeypot, Turnstile. Email + copy button, LinkedIn, GitHub, resume downloads, availability line |
+| 09 | **Contact** | Particle Text | "Let's talk." in particles. Email link with a copy button, LinkedIn, GitHub, resume downloads, availability line. No form: a form needs a backend, and the site has none (decision 25) |
 | — | **Footer** | — | Colophon: "Built with Vite, React and React Bits. Set in Archivo, Inter and JetBrains Mono." `@SansySasy` · view-source link · © 2026 |
 
 ### 6.3 Dossier overlay (case studies)
@@ -213,30 +213,22 @@ Phase 2 ships the first two dossiers; Phase 5a ships the rest.
 |---|---|---|---|
 | Written dossier with SVG architecture diagram | Judgment, scope, outcomes | Every dossier | 2, 5a |
 | Sanitized public repos (three) | Code quality | Linked from dossiers and footer | 5a |
-| **Live sanitized demo**: sample invoice in, structured extraction and token cost out | The AI pipeline works, for real | AI platform dossier | 5b |
-| **Recorded X++ walkthroughs** on Contoso demo data in an F&O dev VM | Real D365 work with zero client data | D365 dossier; 30-60 s muted loops, WebM + MP4 with posters; longer pieces as unlisted YouTube embeds | 5b |
+| **Worked extraction example**: a made-up invoice, the structured data extracted from it, the validation result and the token cost, all precomputed and built into the page | How the pipeline behaves, with nothing sent anywhere | AI platform dossier | 5a |
 | **On-page simulations**: failover topology, slab-pricing calculator, token-cost calculator | Understanding of the domain logic | Ops section; billing and AI dossiers | 4 |
 | **Annotated code walkthroughs**: Shiki snippets with margin notes | How you think in code | Every dossier. X++ has no Shiki grammar: use the C# grammar as an approximation or a minimal custom TextMate grammar | 2, 5a |
-| Downloadable runbooks: Copilot rollout, Always On | Consulting deliverables | D365 and SQL dossiers | 5a |
+| Downloadable runbooks, sanitised from Sanskar's own documents: Copilot enablement, PPAC provisioning with the Unified Developer Experience, App Service scale up and down | Consulting deliverables | D365 and migration dossiers | 5a |
 | Recommendations slot | Third-party credibility | About or Contact, once obtained | 6 |
-| Public status page of your own infrastructure | Live ops discipline | Later | 7 |
 | Upstream React Bits patches (pause-on-hide, DPR cap) | Community proof | Later | 7 |
 
 ### 8.1 Showcase repos
 | Repo | Pillar | Contents |
 |---|---|---|
 | `docflow-extract` | Python / AI | FastAPI skeleton: pluggable LLM providers (Gemini, Claude), schema-driven extraction, per-document status and token-cost tracking to MySQL, connector interfaces for SharePoint, SFTP and Business Central with stubbed implementations, Docker Compose, tests |
-| `d365-fo-extension-patterns` | D365 | X++ samples: table and form extensions, Chain of Command with next-chaining, pre/post event handlers, validateField, data entities, `insert_recordset`, `delete_from`, `RecordInsertList`, dual entry-point classes via `Args.parm()`; README explains when to use each |
+| `d365-fo-extension-patterns` (optional, not scheduled) | D365 | Only if Sanskar wants to publish his own practice code; the D365 dossier already shows the patterns. X++ samples: table and form extensions, Chain of Command with next-chaining, pre/post event handlers, validateField, data entities, `insert_recordset`, `delete_from`, `RecordInsertList`, dual entry-point classes via `Args.parm()`; README explains when to use each |
 | `azure-sql-ag-runbook` | Azure / ops | Always On AG on Azure runbook: topology, Bicep or Terraform for the two VMs and load balancer, PowerShell for disk-threshold alerting and CPU-triggered failover, the Kerberos / CAU troubleshooting guide |
-| `portfolio` | Frontend, tooling | This site plus the `api/` service |
+| `portfolio` | Frontend, tooling | This site |
 
 Each repo carries the monogram, an SVG diagram, badges, and a link back to the site. **Decided 2026-10-01: the repos are clean-room reference implementations, reviewed by Sanskar before they are made public**; the X++ repo uses his own code. The GitHub profile README and bio are updated at launch; the README is drafted at `docs/github-profile/README.md`. Sanitization: no client data, no secrets, generic sample documents only.
-
-### 8.2 The `api/` service (FastAPI on the VPS)
-- `POST /contact`: validates, checks Turnstile, sends via Resend or SMTP, rate-limited per IP.
-- `POST /demo/extract`: runs extraction on bundled sample documents, or on a size-limited upload (PDF or image, a few MB), using Gemini Flash or Claude. Per-IP rate limit, a daily spend cap, precomputed results returned as fallback when the cap is hit, nothing persisted beyond a short TTL, no logging of document contents.
-- Deployed with Docker or a systemd unit behind the existing Nginx, TLS via Certbot, CORS locked to the site's origin. Deployed by a GitHub Actions job over SSH.
-- Interim before 5b: contact via Web3Forms; the demo card shows precomputed results only.
 
 ---
 
@@ -264,24 +256,22 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 
 | Option | Status | Notes |
 |---|---|---|
-| **Cloudflare Workers (static assets)** | **In use** | Free, edge-served, git-connected builds, preview URL per version and branch, same account as DNS, Turnstile and Email Routing |
+| **Cloudflare Workers (static assets)** | **In use** | Free, edge-served, git-connected builds, preview URL per version and branch, same account as DNS and Email Routing |
 | Cloudflare Pages | Not available | The create-application flow no longer exposes it; Pages still runs for existing projects |
 | Vercel Hobby | Fallback | Only needed if the nameservers must stay at GoDaddy; Hobby terms are non-commercial |
-| Nginx on the Ubuntu VPS | Fallback | Full control, on-brand, the `api/` service lives there anyway; no preview URLs |
 
-- **Domain.** `sansysasy.com`, registrar GoDaddy. The domain is the handle, so the URL itself carries SansySasy; the title tag and JSON-LD still lead with "Sanskar Rai". Hostnames: `sansysasy.com` (site), `www.sansysasy.com` (redirects to apex), `api.sansysasy.com` (API). No DNS change before Phase 6.
+- **Domain.** `sansysasy.com`, registrar GoDaddy. The domain is the handle, so the URL itself carries SansySasy; the title tag and JSON-LD still lead with "Sanskar Rai". Hostnames: `sansysasy.com` (site) and `www.sansysasy.com` (redirects to apex). No DNS change before Phase 6.
 - **Nameservers (confirmed 2026-09-13).** At Phase 6 the nameservers move to Cloudflare and the apex is attached to the Worker as a custom domain. **GoDaddy stays the registrar**: ownership, billing and renewal do not move, and this is not a domain transfer; only the dashboard holding the DNS records changes. This is required, not preferred: Cloudflare's docs state a custom domain needs an active Cloudflare zone and cannot be created on a zone you do not manage, and Pages supports external DNS for subdomains only, never an apex. Alternatives considered and rejected: GitHub Pages or the VPS with DNS left at GoDaddy; Vercel, whose free plan is documented as non-commercial only.
-- **Email on the domain.** `hello@sansysasy.com` via Cloudflare Email Routing, forwarding to the existing mailbox, free. Used in the Contact section and as the Resend sending domain (its DNS records are added at launch).
-- **Contact form.** Phase 2: Web3Forms. Phase 5b onward: the `api/` service with Turnstile.
+- **Email on the domain.** `hello@sansysasy.com` via Cloudflare Email Routing, forwarding to the existing mailbox, free. Used in the Contact section once it exists.
+- **Contact.** An email link with a copy button. No form and no backend (decision 25).
 - **Analytics.** Privacy-friendly, no cookie banner: Cloudflare Web Analytics. Worker logs via the `observability` block already enabled in `wrangler.jsonc`.
 
 ### 10.1 Deployment route (in use)
 
-**Two deployables.**
+**One deployable.**
 | Deployable | Built by | Hosted on | URL |
 |---|---|---|---|
 | Site: `dist/` from `vite build` | Workers Builds, on every push | Cloudflare Workers, static assets from `wrangler.jsonc` | `portfolio.rai-sanskar304.workers.dev`, later the apex and `www` |
-| API: `api/` FastAPI | GitHub Actions builds a Docker image, pushes to GHCR | Ubuntu VPS, Nginx reverse proxy, fronted by the Cloudflare proxy | `api.sansysasy.com` |
 
 **Cloudflare project settings (as configured).**
 | Setting | Value |
@@ -298,29 +288,28 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 **Repo requirements for the remote build.** `wrangler.jsonc` (assets from `./dist`, `not_found_handling: "404-page"`, observability on) · `wrangler` as a devDependency so `npx` resolves it · `allowBuilds` for `esbuild` and `workerd` in `pnpm-workspace.yaml`, without which pnpm 12 fails the install with `ERR_PNPM_IGNORED_BUILDS` · `public/404.html`.
 
 **Environments.**
-- Local: `pnpm dev` on `localhost:5173`; `uvicorn` on `localhost:8000`; the Vite dev proxy maps `/api` to 8000.
+- Local: `pnpm dev` on `localhost:5173`.
 - Preview: non-production branches upload a version and return a preview URL, `<version-or-alias>-portfolio.rai-sanskar304.workers.dev`. Available from Phase 1 onward.
 - Production: merges to `main` deploy the Worker, aliased to the custom domain at Phase 6.
 
 **Flow on every push.**
-1. CI: typecheck, lint, Playwright smoke + axe, `vite build`, Lighthouse CI against `dist/`.
+1. CI: typecheck, lint, `vite build`.
 2. Workers Builds builds the same commit, then deploys (`main`) or uploads a preview version (any other branch).
-3. If files under `api/**` changed on `main`: build the image, push to GHCR, SSH to the VPS, `docker compose pull && docker compose up -d`, then `GET /health` must pass.
 
 **DNS at Phase 6.**
 - Registrar stays GoDaddy. Nameservers switch to Cloudflare's free plan; the zone lives on Cloudflare.
-- `sansysasy.com` and `www.sansysasy.com` are added as custom domains on the Worker, with a redirect rule from `www` to the apex; `api.sansysasy.com` is an A record to the VPS IP, proxied; MX and TXT records for Email Routing; TXT and CNAME records for Resend.
-- TLS: Cloudflare at the edge; on the VPS, Certbot or a Cloudflare origin certificate. A rate-limiting rule on `api.sansysasy.com/demo/*`; Turnstile from the same dashboard.
+- `sansysasy.com` and `www.sansysasy.com` are added as custom domains on the Worker, with a redirect rule from `www` to the apex; MX and TXT records for Email Routing.
+- TLS: Cloudflare at the edge.
 
-**Before Phase 6.** The API runs during Phase 5b under an existing VPS hostname or the raw IP with Certbot; the site stays on `workers.dev` with `noindex` set. No DNS change until launch.
+**Before Phase 6.** The site stays on `workers.dev` with `noindex` set. No DNS change until launch.
 
-**Secrets.** LLM API key with a spend cap, Resend key, Turnstile secret: an env file on the VPS, never in the repo. Turnstile site key and the API base URL: public Vite build-time env.
+**Secrets.** None. The site is static and calls no API.
 
-**Rollback.** Workers keeps every version: `wrangler rollback`, or promote an earlier version from the dashboard. API: redeploy the previous image tag.
+**Rollback.** Workers keeps every version: `wrangler rollback`, or promote an earlier version from the dashboard.
 
-**Monitoring.** Cloudflare Web Analytics for the site; Worker observability logs; an uptime check on `/health` from Sanskar's own Zabbix or a free external monitor; a spend alert on the LLM key.
+**Monitoring.** Cloudflare Web Analytics for the site; Worker observability logs; optionally a free external uptime monitor.
 
-**Launch checklist.** Remove the pre-launch `noindex` meta from `index.html`; nameservers moved and propagated; custom domains attached to the Worker; HTTPS on apex, `www` and `api`; `www` redirect; 404 served for unknown paths; robots and sitemap live; Open Graph preview verified with the LinkedIn Post Inspector; Lighthouse on production in both themes; contact form end to end; demo answers within the cap; resume PDFs download; GitHub profile and LinkedIn updated with the URL.
+**Launch checklist.** Remove the pre-launch `noindex` meta from `index.html`; nameservers moved and propagated; custom domains attached to the Worker; HTTPS on apex and `www`; `www` redirect; 404 served for unknown paths; robots and sitemap live; Open Graph preview verified with the LinkedIn Post Inspector; Lighthouse on production in both themes; email link and copy button work; resume PDFs and runbooks download; GitHub profile and LinkedIn updated with the URL.
 
 ---
 
@@ -333,10 +322,9 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 | **2. Content first, effects off** | Every section static with real first-person copy from the resumes; download buttons; dossiers 1 and 2 with diagrams and annotated code; static meta, `og.png`, JSON-LD; Web3Forms contact | Launch-worthy with zero animation, both themes, Lighthouse at least 95, axe clean | Copy review; headline choice; LinkedIn URL; Credly link; MB-500 target date |
 | **3. Light effects** | Text Pressure, Decrypted Text, Magnet Lines, Infinite Menu sphere, word-rise headings, section reveals, spotlight cards, count-up figures, static grain; Lenis; reduced motion; theme-aware effect tokens. GSAP, Motion, Tilted Card and the animated Noise canvas dropped (section 4) | Budgets hold with effects on, in both themes, with reduced motion verified | Nothing: sphere tiles are typographic, so there is no logo list to approve |
 | **4. Heavy and custom** (merged 2026-09-30, PR #5) | Lanyard with badge textures for both themes, strap print, holographic foil, desktop gate and fallback; custom Particle Text; heat-map calendar; FailoverSim; SlabPricingCalc; TokenCostCalc; 404 letter glitch; Open Graph card | Desktop and mobile both pass budgets; snapshots approved | Approve the badge design |
-| **5a. Repos and dossiers** (in progress: dossiers 3-6 merged 2026-10-01, PR #6; docflow-extract and azure-sql-ag-runbook built clean-room, awaiting review before publishing; the X++ repo and runbooks wait on Sanskar's material) | Sanitize and publish the three showcase repos with READMEs and diagrams; dossiers 3-6; runbook downloads; GitHub profile README | Repos public and linked from the site | Access to source to sanitize, or pair on extraction |
-| **5b. Demo and recordings** | `api/` service (contact + demo extraction, caps, Turnstile) deployed on the VPS; contact switched over; recorded X++ clips edited and embedded | Demo returns extraction for sample documents within the cap; clips play in the D365 dossier | VPS access, an LLM API key with a spend limit, an F&O dev VM to record in |
+| **5a. Repos, dossiers and downloads** (in progress) | Dossiers 3-6 (merged 2026-10-01, PR #6); a precomputed worked example in the AI platform dossier; runbooks sanitised from Sanskar's own documents as PDF downloads; two clean-room showcase repositories (`docflow-extract`, `azure-sql-ag-runbook`), published after his review; GitHub profile README drafted for launch | Repos public and linked from the site; runbooks linked | Review the repositories and the sanitised runbooks |
 | **6. Launch** | Hosting choice; GoDaddy DNS; analytics; 404; QA on Windows, Android, iOS Safari; accessibility audit; LinkedIn and resume PDFs updated with the URL | Live on the domain, indexed, shared | Hosting choice, GoDaddy access |
-| **7. Later** | Blog on a subdomain (Astro); public status page; upstream React Bits patches; Konami-code easter egg for SansySasy; MB-500 update | — | — |
+| **7. Later** | Blog on a subdomain (Astro); upstream React Bits patches; Konami-code easter egg for SansySasy; MB-500 update | — | — |
 
 | Effort | Working sessions |
 |---|---|
@@ -345,7 +333,6 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 | Phase 3 | 2 |
 | Phase 4 | 2 |
 | Phase 5a | 2-3, mostly sanitization |
-| Phase 5b | 1-2, plus recording time |
 | Phase 6 | 1 |
 
 Phase 0 commands Claude will run on go, for reference:
@@ -367,8 +354,7 @@ Layout and copy are moderate work. Each React Bits effect is copy-paste plus a f
 - **Two themes doubles visual QA.** Token-only styling, the styleguide entry, snapshot tests in both themes from Phase 1.
 - **Lanyard weight.** Fine pointers at least 1024px wide only, fetched after the first interaction so lab runs never load it; the static badge everywhere else. Rapier's WASM was replaced by a Verlet rope to take the chunk from 1.1 MB to 260 KB gzipped.
 - **Infinite Menu on light theme.** Runtime atlas in the theme tile color; verified in Phase 3.
-- **Live demo cost and abuse.** Per-IP rate limit, daily spend cap on the LLM key, precomputed fallback, size limits, no persistence.
-- **Recording access.** Needs an F&O dev VM with Contoso data; if unavailable, the D365 dossier ships with annotated code and the runbook only.
+- **Running costs.** None beyond the domain: static hosting on Cloudflare's free plan, free CI on GitHub, no server, no API key, no VM (decision 25). Anything proposed later has to fit that.
 - **Confidentiality slip.** Anonymization rule in the review checklist; no screenshots anywhere; numbers limited to the public resume.
 - **Sparse GitHub.** Phase 5a repos plus profile README; the site links dossiers first, repos second.
 - **Vendored React Bits drift.** Origin header with date; local patches documented in each file.
@@ -377,7 +363,7 @@ Layout and copy are moderate work. Each React Bits effect is copy-paste plus a f
 ---
 
 ## 14. Removed across revisions
-Evil Eye · blog and `/writing` · site-wide Consultant/Engineer mode (lens filter chips instead) · photo on the badge (monogram) · React Bits Pro purchase (custom build) · Next.js and all separate routes (`/work/[slug]`, `/resume`, `/styleguide`) in favor of one page with overlays · the D365 F&O consultant framing (2026-09-14) · GSAP, Motion, Tilted Card, the Glass Surface component and the animated Noise canvas (Phase 3) · a cycling role line, replaced by one line showing all three roles · Rapier and drei for the lanyard, and Tilted Card as its fallback (Phase 4).
+Evil Eye · blog and `/writing` · site-wide Consultant/Engineer mode (lens filter chips instead) · photo on the badge (monogram) · React Bits Pro purchase (custom build) · Next.js and all separate routes (`/work/[slug]`, `/resume`, `/styleguide`) in favor of one page with overlays · the D365 F&O consultant framing (2026-09-14) · GSAP, Motion, Tilted Card, the Glass Surface component and the animated Noise canvas (Phase 3) · a cycling role line, replaced by one line showing all three roles · Rapier and drei for the lanyard, and Tilted Card as its fallback (Phase 4) · all of Phase 5b: the `api/` service, the live extraction demo, the contact form and its backend, the recorded X++ walkthroughs, and the public status page (2026-10-01, decision 25).
 
 ---
 
@@ -387,4 +373,5 @@ Evil Eye · blog and `/writing` · site-wide Consultant/Engineer mode (lens filt
 3. Sanskar's proofread of the Phase 2 copy, deferred by him on 2026-09-15. The final headline pick comes with it.
 4. ~~Monogram and display font.~~ Chosen 2026-09-13.
 5. Hosting and analytics: decide at Phase 6.
-6. Whether an F&O dev VM is available to record in. Needed before Phase 5b.
+6. ~~Whether an F&O dev VM is available to record in.~~ Recordings cancelled (decision 25).
+7. Sanskar's review of the two clean-room repositories before they are published, and of the sanitised runbooks before they are linked.
