@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   // Static-only Worker: no server code, just the built site in dist/.
-  // The FastAPI service (contact + demo) runs on the VPS, not here. See PLAN.md 10.1.
+  // Response headers come from public/_headers. See PLAN.md 10.1.
   "name": "portfolio",
   "compatibility_date": "2026-09-11",
   "assets": {

@@ -178,6 +178,8 @@ Static-only **Cloudflare Worker** (not Pages: the dashboard no longer exposes Pa
 | Build variable | **`PNPM_VERSION=12.4.1`** — required; the build image ships pnpm 10.11.1, which cannot read a pnpm 12 lockfile |
 | Node version | from `.node-version` (`24`); build image default is already 24.18 |
 
+**Response headers** come from `public/_headers`, which Workers static assets read and do not serve: a year of immutable caching for the fingerprinted files under `/assets`, a day for runbooks, resumes and the Open Graph image, and `nosniff`, a referrer policy, `X-Frame-Options: DENY` and a permissions policy on everything. Before this, every file was served `max-age=0, must-revalidate`. There is no Content-Security-Policy yet: the theme script and the JSON-LD block are inline, so a policy needs hashes first. Vite's preview server ignores `_headers`; to check them locally run `pnpm exec wrangler dev --port 8788`, which needs no login, and stop its `workerd` processes afterwards.
+
 **DNS, decided 2026-09-13.** At Phase 6 the nameservers for sansysasy.com move to Cloudflare and the domain is attached to the Worker as a custom domain. **GoDaddy stays the registrar**: ownership, billing and renewal do not move, and this is not a domain transfer. Only which dashboard holds the DNS records changes. A Worker custom domain requires an active Cloudflare zone, so external DNS is not an option for the apex. No DNS change before Phase 6.
 
 ## Conventions
