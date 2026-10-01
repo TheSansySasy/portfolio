@@ -1,30 +1,24 @@
-import { AiDocumentPlatform } from './AiDocumentPlatform'
-import { BillingPortal } from './BillingPortal'
-import { DossierBlock, DossierList } from './DossierShell'
+import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react'
 
-/** Outline shown for the four dossiers still to be written in Phase 5a. */
-function Pending() {
-  return (
-    <DossierBlock label="In progress" heading="This one is not written yet">
-      <p>
-        The overlay, the deep link and the card are real; the write-up is not. Two dossiers are
-        finished so far, and the remaining four follow the same structure.
-      </p>
-      <DossierList
-        items={[
-          'Context and constraints, with clients anonymised.',
-          'The problem, stated plainly.',
-          'An architecture diagram drawn for this site rather than screenshotted.',
-          'What I built, and the annotated code that carries the idea.',
-          'The outcome in numbers, and what I would do differently.',
-        ]}
-      />
-    </DossierBlock>
-  )
+// Each dossier is its own chunk: they are read one at a time, only after a
+// card is opened, so none of them belongs in the page's first download.
+const DOSSIERS: Record<string, LazyExoticComponent<ComponentType>> = {
+  'ai-document-platform': lazy(() => import('./AiDocumentPlatform').then((m) => ({ default: m.AiDocumentPlatform }))),
+  'billing-portal': lazy(() => import('./BillingPortal').then((m) => ({ default: m.BillingPortal }))),
+  'sql-always-on-azure': lazy(() => import('./SqlAlwaysOn').then((m) => ({ default: m.SqlAlwaysOn }))),
+  'retail-erp-deployment': lazy(() =>
+    import('./RetailErpDeployment').then((m) => ({ default: m.RetailErpDeployment })),
+  ),
+  'gcp-to-azure-migration': lazy(() => import('./GcpToAzure').then((m) => ({ default: m.GcpToAzure }))),
+  'd365-fo-extensions': lazy(() => import('./D365Extensions').then((m) => ({ default: m.D365Extensions }))),
 }
 
 export function DossierBody({ slug }: { slug: string }) {
-  if (slug === 'ai-document-platform') return <AiDocumentPlatform />
-  if (slug === 'billing-portal') return <BillingPortal />
-  return <Pending />
+  const Body = DOSSIERS[slug]
+  if (!Body) return null
+  return (
+    <Suspense fallback={<p className="mono-label text-muted">Loading the write-up…</p>}>
+      <Body />
+    </Suspense>
+  )
 }

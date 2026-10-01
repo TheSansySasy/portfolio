@@ -8,7 +8,7 @@ Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), a Python engin
 
 **Positioning rule (corrected 2026-09-14): never describe him as a D365 F&O consultant.** Tectura was functional training that earned MB-310; X++ and the thirteen extension modules are self-study; MB-500 is targeted for November 2026. The Copilot rollout was a real engagement. The role line is `Python Engineer · Cloud & DevOps · Dynamics 365 Integration`.
 
-**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. Phase 3 (effects) was merged to `main` on 2026-09-16 (PR #4). **Phase 4 (heavy and custom effects) was merged to `main` on 2026-09-30 (PR #5), after he approved the badge design. Phase 5 must not be started without Sanskar saying so.** LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
+**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. Phase 3 (effects) was merged to `main` on 2026-09-16 (PR #4). Phase 4 (heavy and custom effects) was merged to `main` on 2026-09-30 (PR #5), after he approved the badge design. **Phase 5a (repos and dossiers) was started on his go on 2026-10-01, on the branch `phase-5a-content`.** Dossiers 3 to 6 are written; the showcase repositories and the runbook downloads wait on his source material and decisions (below). Phase 5b (the `api/` service, the live demo, recordings) needs VPS access, an LLM key with a spend limit and an F&O dev VM, and must not start without his go. LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
 
 ## Commands
 
@@ -84,6 +84,29 @@ Every effect is static under `prefers-reduced-motion`, and content must still re
 **The initial render is split.** `App.tsx` renders the nav and hero immediately and mounts every other section in a React transition, which renders in small interruptible slices; that removed the largest long task on mobile. A URL that arrives with a hash renders everything at once and then scrolls to the section explicitly, because React's scheduled first render finishes after the browser's own anchor scroll has given up. The nav's scroll-spy waits for the sections via `useActiveSection(ids, enabled)`.
 
 **Fonts are split by need.** Every page imports the weight-only `@fontsource-variable/archivo` (35 KB Latin). The width-axis file (88 KB) is registered in `globals.css` as its own family, `Archivo Pressure`, and applied to `.pressure-name` only inside a media query that mirrors the effect's gate: fine pointer, hover, at least 768px, motion allowed. Mobile and reduced-motion visitors never download it. Loading it for everyone pushed mobile LCP from 2.2s to 2.6s, because Lighthouse counts the fonts a text element needs toward its paint.
+
+## Dossiers (Phase 5a)
+
+- All six case studies are written. Each is a module in `src/dossiers/` and **its own lazy chunk** (`DossierBody.tsx`), so none of them is in the first download; moving them out took the main chunk from 31 KB to 17 KB gzipped.
+- **Content comes only from the two resumes and Sanskar's own statements.** Code samples are labelled as simplified or written for the page, with names generalised; they show patterns, not transcripts. "AgentF1n" (a Runtime Solutions project name on the resume) is left out as a possible client name. The D365 dossier keeps the positioning rule: Tectura was functional training, X++ is self-study, the Copilot rollout was a real engagement.
+- New diagrams use `src/diagrams/FlowDiagram.tsx`: boxes, links, notes and dashed groups as data, in the same house style as the hand-drawn Phase 2 diagrams, with a full-sentence `aria-label`. Give a box an `id` when two share a title.
+- `CodeBlock` puts each margin note **under its line** whenever any line in the block is longer than 52 characters, because at the dossier's width a longer line beside a note needed its own sideways scrollbar.
+- The GitHub profile README is drafted at `docs/github-profile/README.md`; it is published to `TheSansySasy/TheSansySasy` at launch, not before.
+
+## Showcase repositories (Phase 5a)
+
+**Decided 2026-10-01:** the showcase repos are **clean-room reference implementations**, written from scratch with no EBT code, and Sanskar reviews each one before anything is made public. They live in `showcase/<repo>/`, which the portfolio's `.gitignore` excludes; each is its own git repo with the same no-reply identity, committed locally and **not pushed**. Creating the GitHub repos and pushing is an outward action that waits for his go; link them from the dossiers and footer only once they are public.
+
+| Repo | State | Checks |
+|---|---|---|
+| `docflow-extract` | Built. FastAPI, pluggable Gemini and Claude providers plus a fake, validation before delivery, one documents table for pages, rows, tokens and cost, stubbed SharePoint, SFTP and Business Central connectors (BC payload mapping implemented) | `uv run pytest` (14 pass), `uv run ruff check`, smoke-tested end to end. Docker Compose written but not run: no Docker on this machine |
+| `azure-sql-ag-runbook` | Built. Bicep (two zonal SQL 2022 VMs, internal LB with floating IP and probe 59999, cloud witness storage), build and failover docs, the Kerberos and CAU guide, monitoring notes, three PowerShell scripts | `bicep build` and `bicep lint` clean (Bicep CLI 0.47 installed via `az bicep install`); scripts parse and their decision logic passes in Windows PowerShell 5.1. The Pester 5 suite runs in its CI, since only Pester 3.4 is installed here. Never deployed |
+| `d365-fo-extension-patterns` | Waits for Sanskar's own X++ code; not to be written clean-room, since it would stand for his learning |
+
+The downloadable runbooks (Copilot rollout, Always On) wait for **his own documents**, which he chose to share for sanitising (2026-10-01).
+
+- `uv` creates each Python repo's `.venv` inside `showcase/`; use `uv run` from the repo folder, and `cd` back to `C:MyWebsite` afterwards (the Bash tool keeps the directory).
+- In the Python repo, usage months are UTC calendar months; a smoke test on 1 October in Delhi was still September in UTC.
 
 ## Gotchas found the hard way
 

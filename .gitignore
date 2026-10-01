@@ -39,3 +39,6 @@ test-results
 
 # Wrangler / Cloudflare local state
 .wrangler
+
+# Clean-room showcase repositories, each its own git repo, published separately
+showcase/
