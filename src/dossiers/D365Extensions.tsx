@@ -1,5 +1,7 @@
 import { FlowDiagram } from '../diagrams/FlowDiagram'
+import { RUNBOOKS } from '../content/data/runbooks'
 import { CodeBlock } from '../ui/CodeBlock'
+import { RunbookList } from '../ui/RunbookList'
 import { DossierBlock, DossierList, DossierMetrics, DossierStack } from './DossierShell'
 
 function ChainOfCommand() {
@@ -146,6 +148,16 @@ export function D365Extensions() {
             'Wrote the steps up as a reusable rollout runbook, so the next environment is a checklist rather than a search.',
           ]}
         />
+      </DossierBlock>
+
+      <DossierBlock label="Runbooks" heading="The documents themselves">
+        <p>
+          Two documents I wrote while doing this work, with every client detail taken out. The
+          first is the rollout record above. The second is how I provision a Finance and
+          Operations environment through the Power Platform admin center and connect Visual
+          Studio to it, which replaces the cloud-hosted development VM.
+        </p>
+        <RunbookList items={[RUNBOOKS.copilot, RUNBOOKS.ppacUde]} />
       </DossierBlock>
 
       <DossierBlock label="Where it stands">
