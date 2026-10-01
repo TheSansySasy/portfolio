@@ -1,5 +1,7 @@
+import { REPOS } from '../content/data/repos'
 import { FlowDiagram } from '../diagrams/FlowDiagram'
 import { CodeBlock } from '../ui/CodeBlock'
+import { RepoCard } from '../ui/RepoCard'
 import { DossierBlock, DossierList, DossierStack } from './DossierShell'
 
 function KerberosPath() {
@@ -151,6 +153,15 @@ export function SqlAlwaysOn() {
           The simulation in the Operations section walks through the same failover, including what
           quorum and the witness are for.
         </p>
+      </DossierBlock>
+
+      <DossierBlock label="Code" heading="The runbook, in a repository">
+        <p>
+          The cluster as code, the procedures for building it and failing it over, the scripts
+          above in full, and this troubleshooting guide. Written fresh, with nothing from a
+          client environment.
+        </p>
+        <RepoCard repo={REPOS.sqlAg} />
       </DossierBlock>
 
       <DossierBlock label="Stack">

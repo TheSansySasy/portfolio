@@ -514,6 +514,7 @@ try {
   await evaluate(cdp, `document.getElementById('tok-docs').closest('.rounded-lg').scrollIntoView({ block: 'center' }); return true`)
   await sleep(300)
   await shot(cdp, '06a-desktop-dark-token-calc')
+  tokenCalc.repoLink = await evaluate(cdp, `return document.querySelector('[role=dialog] a[href*="github.com/TheSansySasy/"]')?.getAttribute('href') ?? null`)
   report.desktopTokenCalc = tokenCalc
 
   // Worked extraction example: a clean read is delivered, a misread total is held.
