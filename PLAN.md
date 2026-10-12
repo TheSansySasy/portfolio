@@ -1,7 +1,7 @@
 # Sanskar Rai — Portfolio Website Plan
 
-Status: **PLAN v1.6, 2026-10-01.** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged and live at portfolio.rai-sanskar304.workers.dev, together with the positioning correction of 2026-09-14 (decision 22). Phase 3 (effects) merged 2026-09-16 (PR #4). Phase 4 (heavy and custom) merged 2026-09-30 (PR #5) after Sanskar approved the badge design; section 4 records what was built, decision 24 the choices, and section 9 the measured budgets. **Phase 5a is complete (2026-10-01):** dossiers 3 to 6 (PR #6), a worked extraction example and three sanitised runbooks (PR #7), and two clean-room showcase repositories, public on GitHub and linked from their dossiers. Launch (Phase 6) is next, on his go. **Phase 5b is cancelled (decision 25):** nothing that needs a server, a paid API key or a development VM will be built. What remains is the rest of 5a, then launch.
-Remaining open items are in section 15.
+Status: **PLAN v1.7, 2026-10-12. Launched: live at https://sansysasy.com since 2026-10-12 (PR #10, decision 26).** Single-page site on Cloudflare Workers (section 10). Phases 0, 1 and 2 are merged, together with the positioning correction of 2026-09-14 (decision 22). Phase 3 (effects) merged 2026-09-16 (PR #4). Phase 4 (heavy and custom) merged 2026-09-30 (PR #5) after Sanskar approved the badge design; section 4 records what was built, decision 24 the choices, and section 9 the measured budgets. **Phase 5a is complete (2026-10-01):** dossiers 3 to 6 (PR #6), a worked extraction example and three sanitised runbooks (PR #7), and two clean-room showcase repositories, public on GitHub and linked from their dossiers. **Phase 5b is cancelled (decision 25):** nothing that needs a server, a paid API key or a development VM will be built. **Phase 6 (launch) went live on 2026-10-12**; the launch checklist in section 10.1 records what is done and what is left.
+Remaining open items are in section 15; future tasks agreed after launch are in section 16.
 
 ---
 
@@ -34,6 +34,7 @@ Remaining open items are in section 15.
 | 23 | Phase 3 implementation | **Decided 2026-09-15.** No GSAP and no Motion: reveals and word rises are CSS, grain is a static SVG tile, figures use a small count-up. The only new dependencies are `lenis` and `gl-matrix`. React Bits sources are MIT + Commons Clause and were adapted with their bugs fixed (section 4) |
 | 24 | Phase 4 implementation | **Decided 2026-09-30.** The lanyard keeps React Bits' model and topology but runs on a small Verlet rope instead of Rapier (whose inlined WASM took the chunk to 1.1 MB gzipped) and loads without drei; its chunk is 260 KB gzipped and is fetched only after the visitor's first interaction, on fine-pointer screens at least 1024px wide. Badge art, foil and strap print are drawn at runtime from the theme tokens; the back carries the roundel and a QR code to LinkedIn. The fallback is the static badge, not Tilted Card. The heat map's daily shape is illustrative and labelled so; only its total is a real figure. The calculators use illustrative credit rates and editable example prices. The Open Graph card is rendered from HTML by a script |
 | 25 | Running costs | **Decided 2026-10-01: nothing that costs money to keep running.** Sanskar will not maintain a VPS, a paid AI API key or an F&O development VM for a portfolio. Phase 5b is cancelled: no `api/` service, no live extraction demo, no contact form backend, no recorded X++ walkthroughs, no status page. The site stays fully static on Cloudflare's free plan. In their place: a precomputed worked example in the AI platform dossier, and runbooks sanitised from his own documents as downloads. The showcase repositories run without keys or servers |
+| 26 | Launch | **Live 2026-10-12.** Sanskar moved the nameservers to Cloudflare himself (GoDaddy stays the registrar) and PR #10 attached the apex to the Worker as a custom domain. `www` redirects to the apex through a Redirect Rule; Always Use HTTPS is on. **Analytics: yes**, Cloudflare Web Analytics, left on Cloudflare's automatic injection for now; loading the beacon after the page is a future task (section 16). **GitHub profile README: yes.** **Email on the domain: undecided**, kept in the plan, nothing set up |
 
 ---
 
@@ -240,6 +241,8 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 
 **Measured after Phase 4 (2026-09-30)**, same method against a same-day build of Phase 3: mobile performance 94 against 94, LCP 2.43 s against 2.43 s, TBT 109 ms against 112 ms, CLS 0 for both, accessibility and best practices 100; desktop 100 with LCP 0.62 s. Initial JavaScript rose to about 105 KB gzipped. The lanyard's 260 KB chunk and 139 KB model load only after a visitor interacts, so no lab run fetches them. The budgets hold.
 
+**Measured on production after launch (2026-10-12), in both themes.** SEO is 100 now that the `noindex` is gone; accessibility and best practices 100 in dark and light; desktop 99 in both, LCP 0.84 s. Mobile performance on `sansysasy.com` came out at 83 to 88 over eight runs (seven dark, one light at 87), LCP 3.1 to 3.3 s, CLS 0. **The cause is Cloudflare's Web Analytics beacon**, which the zone injects into every HTML response for browsers: three mobile runs alternated with the same build on `workers.dev`, which has no beacon, gave medians of 85 against 93 for performance and 3.24 s against 2.74 s for LCP. The beacon is a 10 KB high-priority script from a second origin that competes with the CSS, fonts and code on Lighthouse's throttled connection. Real visitors barely see it: the first day's field data put LCP at 193 ms median and 753 ms at the 75th percentile. So the build still meets the mobile budgets, and the beacon pushes the lab score on the domain below them. Sanskar chose to leave it as it is for now; moving it is future task 1 (section 16).
+
 **Effects discipline.** Lazy import; mount on intersection; pause off-screen; DPR cap 2; Lanyard desktop and pointer-fine only; reduced motion switches every effect to its static fallback; fonts subset and preloaded; media clips lazy-loaded with posters.
 
 **Accessibility.** Skip link, landmarks, visible focus, keyboard-operable toggle, filter and dossier sheet, focus trap in the sheet, effects `aria-hidden`, sphere content mirrored in a list, AA contrast in both themes, axe checks in CI.
@@ -252,7 +255,7 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 
 ## 10. Hosting, domain, services
 
-**Decided 2026-09-12: Cloudflare Workers with static assets.** The Cloudflare dashboard now offers only the Workers flow when creating an application, so the site is a static-only Worker rather than a Pages project. Live since 2026-09-12 at `https://portfolio.rai-sanskar304.workers.dev`.
+**Decided 2026-09-12: Cloudflare Workers with static assets.** The Cloudflare dashboard now offers only the Workers flow when creating an application, so the site is a static-only Worker rather than a Pages project. Live since 2026-09-12 at `https://portfolio.rai-sanskar304.workers.dev`, and **at `https://sansysasy.com` since 2026-10-12**; the `workers.dev` address stays on as a fallback.
 
 | Option | Status | Notes |
 |---|---|---|
@@ -260,18 +263,18 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 | Cloudflare Pages | Not available | The create-application flow no longer exposes it; Pages still runs for existing projects |
 | Vercel Hobby | Fallback | Only needed if the nameservers must stay at GoDaddy; Hobby terms are non-commercial |
 
-- **Domain.** `sansysasy.com`, registrar GoDaddy. The domain is the handle, so the URL itself carries SansySasy; the title tag and JSON-LD still lead with "Sanskar Rai". Hostnames: `sansysasy.com` (site) and `www.sansysasy.com` (redirects to apex). No DNS change before Phase 6.
+- **Domain.** `sansysasy.com`, registrar GoDaddy. The domain is the handle, so the URL itself carries SansySasy; the title tag and JSON-LD still lead with "Sanskar Rai". Hostnames: `sansysasy.com` (site) and `www.sansysasy.com` (redirects to apex). The nameservers moved to Cloudflare on 2026-10-12.
 - **Nameservers (confirmed 2026-09-13).** At Phase 6 the nameservers move to Cloudflare and the apex is attached to the Worker as a custom domain. **GoDaddy stays the registrar**: ownership, billing and renewal do not move, and this is not a domain transfer; only the dashboard holding the DNS records changes. This is required, not preferred: Cloudflare's docs state a custom domain needs an active Cloudflare zone and cannot be created on a zone you do not manage, and Pages supports external DNS for subdomains only, never an apex. Alternatives considered and rejected: GitHub Pages or the VPS with DNS left at GoDaddy; Vercel, whose free plan is documented as non-commercial only.
-- **Email on the domain.** `hello@sansysasy.com` via Cloudflare Email Routing, forwarding to the existing mailbox, free. Used in the Contact section once it exists.
+- **Email on the domain.** **Undecided (2026-10-12):** Sanskar has not decided whether he wants it, and asked to keep it in the plan. The free option would be `hello@sansysasy.com` through Cloudflare Email Routing, forwarding to the existing mailbox; it would also change the Contact section's address. Nothing is set up (future task 2, section 16).
 - **Contact.** An email link with a copy button. No form and no backend (decision 25).
-- **Analytics.** Privacy-friendly, no cookie banner: Cloudflare Web Analytics. Worker logs via the `observability` block already enabled in `wrangler.jsonc`.
+- **Analytics.** Privacy-friendly, no cookie banner: Cloudflare Web Analytics, **on since launch**. The zone turned it on and injects the beacon itself; Sanskar left it that way for now (future task 1, section 16). Worker logs via the `observability` block already enabled in `wrangler.jsonc`.
 
 ### 10.1 Deployment route (in use)
 
 **One deployable.**
 | Deployable | Built by | Hosted on | URL |
 |---|---|---|---|
-| Site: `dist/` from `vite build` | Workers Builds, on every push | Cloudflare Workers, static assets from `wrangler.jsonc` | `portfolio.rai-sanskar304.workers.dev`, later the apex and `www` |
+| Site: `dist/` from `vite build` | Workers Builds, on every push | Cloudflare Workers, static assets from `wrangler.jsonc` | `sansysasy.com` (custom domain), `portfolio.rai-sanskar304.workers.dev` (fallback); `www` redirects to the apex |
 
 **Cloudflare project settings (as configured).**
 | Setting | Value |
@@ -290,18 +293,18 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 **Environments.**
 - Local: `pnpm dev` on `localhost:5173`.
 - Preview: non-production branches upload a version and return a preview URL, `<version-or-alias>-portfolio.rai-sanskar304.workers.dev`. Available from Phase 1 onward.
-- Production: merges to `main` deploy the Worker, aliased to the custom domain at Phase 6.
+- Production: merges to `main` deploy the Worker, which serves the custom domain `sansysasy.com`.
 
 **Flow on every push.**
 1. CI: typecheck, lint, `vite build`.
 2. Workers Builds builds the same commit, then deploys (`main`) or uploads a preview version (any other branch).
 
-**DNS at Phase 6.**
-- Registrar stays GoDaddy. Nameservers switch to Cloudflare's free plan; the zone lives on Cloudflare.
-- `sansysasy.com` and `www.sansysasy.com` are added as custom domains on the Worker, with a redirect rule from `www` to the apex; MX and TXT records for Email Routing.
+**DNS (done 2026-10-12).**
+- Registrar stays GoDaddy. The nameservers point at Cloudflare's free plan (two `*.ns.cloudflare.com` servers), and the zone lives on Cloudflare. GoDaddy's own DNS page still lists its old records, but nothing reads them any more. DNSSEC was off at GoDaddy and has not been turned on in Cloudflare.
+- The apex is the Worker's only custom domain, declared in `wrangler.jsonc` (`routes` with `custom_domain: true`); Cloudflare created its DNS record and certificate on the first deploy.
+- `www` is a proxied CNAME to the apex, with a Redirect Rule in the dashboard: hostname `www.sansysasy.com`, a dynamic 301 to `concat("https://sansysasy.com", http.request.uri.path)`, query string kept. Always Use HTTPS is on, so `http://` on either host ends at `https://sansysasy.com` in one redirect.
+- Onboarding imported GoDaddy's records; the two parking `A` records were deleted. The `_dmarc` TXT (it stops others from sending mail as the domain) and GoDaddy's `_domainconnect` CNAME were kept. No MX records, because there is no mail.
 - TLS: Cloudflare at the edge.
-
-**Before Phase 6.** The site stays on `workers.dev` with `noindex` set. No DNS change until launch.
 
 **Secrets.** None. The site is static and calls no API.
 
@@ -309,7 +312,25 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 
 **Monitoring.** Cloudflare Web Analytics for the site; Worker observability logs; optionally a free external uptime monitor.
 
-**Launch checklist.** Remove the pre-launch `noindex` meta from `index.html`; nameservers moved and propagated; custom domains attached to the Worker; HTTPS on apex and `www`; `www` redirect; 404 served for unknown paths; robots and sitemap live; Open Graph preview verified with the LinkedIn Post Inspector; Lighthouse on production in both themes; email link and copy button work; resume PDFs and runbooks download; the two showcase repositories' READMEs and GitHub homepage fields switched from the `workers.dev` address to `sansysasy.com`; GitHub profile and LinkedIn updated with the URL.
+**Launch checklist (status 2026-10-12).**
+- Done and checked on production:
+  - The pre-launch `noindex` meta removed from `index.html`.
+  - Nameservers moved and propagated.
+  - Custom domain attached to the Worker.
+  - HTTPS on the apex and `www`, and the `www` redirect.
+  - The 404 page served for unknown paths.
+  - robots, the sitemap and the Open Graph image live.
+  - Lighthouse on production in both themes (section 9).
+  - The full effects verifier passes against the domain.
+  - The email link and copy button work: the address reaches the clipboard and "Copied" is announced.
+  - Both resume PDFs and all three runbooks download.
+  - The two showcase repositories' READMEs and GitHub homepage fields switched to `sansysasy.com`.
+- Left:
+  - Publish the GitHub profile README from `docs/github-profile/README.md` and set the profile's website field (Claude, on Sanskar's go).
+  - Verify the Open Graph preview with the LinkedIn Post Inspector, which needs his LinkedIn login (Sanskar).
+  - Add the URL to LinkedIn and to his resume PDFs (Sanskar).
+  - QA on a real Android phone and on iOS Safari (Sanskar).
+  - Optionally, submit the sitemap in Google Search Console (Sanskar; free).
 
 ---
 
@@ -323,7 +344,7 @@ Each repo carries the monogram, an SVG diagram, badges, and a link back to the s
 | **3. Light effects** | Text Pressure, Decrypted Text, Magnet Lines, Infinite Menu sphere, word-rise headings, section reveals, spotlight cards, count-up figures, static grain; Lenis; reduced motion; theme-aware effect tokens. GSAP, Motion, Tilted Card and the animated Noise canvas dropped (section 4) | Budgets hold with effects on, in both themes, with reduced motion verified | Nothing: sphere tiles are typographic, so there is no logo list to approve |
 | **4. Heavy and custom** (merged 2026-09-30, PR #5) | Lanyard with badge textures for both themes, strap print, holographic foil, desktop gate and fallback; custom Particle Text; heat-map calendar; FailoverSim; SlabPricingCalc; TokenCostCalc; 404 letter glitch; Open Graph card | Desktop and mobile both pass budgets; snapshots approved | Approve the badge design |
 | **5a. Repos, dossiers and downloads** (complete 2026-10-01: dossiers PR #6; worked example and runbooks PR #7; both repositories public and linked) | Dossiers 3-6 (merged 2026-10-01, PR #6); a precomputed worked example in the AI platform dossier; runbooks sanitised from Sanskar's own documents as PDF downloads; two clean-room showcase repositories (`docflow-extract`, `azure-sql-ag-runbook`), published after his review; GitHub profile README drafted for launch | Repos public and linked from the site; runbooks linked | Review the repositories and the sanitised runbooks |
-| **6. Launch** | Hosting choice; GoDaddy DNS; analytics; 404; QA on Windows, Android, iOS Safari; accessibility audit; LinkedIn and resume PDFs updated with the URL | Live on the domain, indexed, shared | Hosting choice, GoDaddy access |
+| **6. Launch** (live 2026-10-12, PR #10) | Hosting choice; GoDaddy DNS; analytics; 404; QA on Windows, Android, iOS Safari; accessibility audit; LinkedIn and resume PDFs updated with the URL | Live on the domain, indexed, shared | Hosting choice, GoDaddy access |
 | **7. Later** | Blog on a subdomain (Astro); upstream React Bits patches; Konami-code easter egg for SansySasy; MB-500 update | — | — |
 
 | Effort | Working sessions |
@@ -368,10 +389,35 @@ Evil Eye · blog and `/writing` · site-wide Consultant/Engineer mode (lens filt
 ---
 
 ## 15. Open items, non-blocking
-1. GoDaddy access to change nameservers or add records. Needed at Phase 6. Domain is known: `sansysasy.com`.
+1. ~~GoDaddy access to change nameservers or add records.~~ Sanskar moved the nameservers himself on 2026-10-12.
 2. ~~LinkedIn URL, credential link, MB-500 target date.~~ Supplied 2026-09-14.
 3. Sanskar's proofread of the Phase 2 copy, deferred by him on 2026-09-15. The final headline pick comes with it.
 4. ~~Monogram and display font.~~ Chosen 2026-09-13.
-5. Hosting and analytics: decide at Phase 6.
+5. ~~Hosting and analytics.~~ Cloudflare Workers and Cloudflare Web Analytics (decision 26).
 6. ~~Whether an F&O dev VM is available to record in.~~ Recordings cancelled (decision 25).
 7. ~~Sanskar's review of the two clean-room repositories and the sanitised runbooks.~~ Published on his say, 2026-10-01; he will skim them later, so corrections may still arrive.
+
+---
+
+## 16. Future tasks (agreed after launch)
+
+Recorded on Sanskar's say, 2026-10-12. None is scheduled, and each starts only on his go. All of them fit decision 25: nothing here costs money to run.
+
+1. **Load the Web Analytics beacon after the page has loaded.**
+   - Why: Cloudflare injects `beacon.min.js` into every HTML response for browsers, as a high-priority script from a second origin. On Lighthouse's throttled mobile connection it competes with the page's CSS, fonts and code, which costs about 8 points (section 9: median 85 on the domain against 93 for the same build on `workers.dev`). Real visitors barely notice it, but PageSpeed Insights shows the lab score to anyone who runs it.
+   - How:
+     1. Sanskar switches the site in Web Analytics from automatic injection to the manual JS snippet, which turns injection off.
+     2. Claude adds the snippet to the site, loaded after the `load` event.
+     3. Re-measure, alternating runs against `workers.dev`.
+   - Both steps go together: a snippet added while injection is still on loads the beacon twice.
+   - The site token is not a secret, since it is already in the served HTML.
+   - Late loading keeps Core Web Vitals, because the browser holds those readings for scripts that load afterwards.
+   - Left as it is on 2026-10-12 by Sanskar's choice.
+2. **Email on the domain.** Undecided. If wanted:
+   - Cloudflare Email Routing (free) forwards `hello@sansysasy.com` to the existing mailbox. It needs the MX and TXT records Cloudflare adds.
+   - `SITE.email` and the Contact section then change.
+   - Receiving needs nothing more. Sending as that address needs SPF and DKIM for whatever sends it, because the existing `_dmarc` record (`p=quarantine`, reports to a GoDaddy-run address) quarantines mail that fails them.
+3. **Content-Security-Policy.** Not set yet:
+   - The theme script and the JSON-LD block are inline, so the policy needs their hashes.
+   - It must also allow the Web Analytics beacon: script from `static.cloudflareinsights.com`, and its reports to `/cdn-cgi/rum`. Its form depends on task 1.
+4. **Watch INP in real visitor data.** On launch day Web Analytics showed one interaction at 496 ms on `body`, probably from the automated checks. If real visitors show it too, profile the first interaction: it also starts the lanyard's chunk on desktop.

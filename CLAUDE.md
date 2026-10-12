@@ -4,11 +4,11 @@ Working notes for this repo: conventions, environment quirks, and deployment fac
 
 ## What this is
 
-Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), a Python engineer working in cloud and DevOps, whose Dynamics 365 work in production is Business Central integration. Live domain will be **sansysasy.com**. Currently at `https://portfolio.rai-sanskar304.workers.dev` with `noindex` set until launch.
+Single-page portfolio for **Sanskar Rai** (handle **SansySasy**), a Python engineer working in cloud and DevOps, whose Dynamics 365 work in production is Business Central integration. **Live at https://sansysasy.com since 2026-10-12** (PR #10); `https://portfolio.rai-sanskar304.workers.dev` still serves the same build as a fallback.
 
 **Positioning rule (corrected 2026-09-14): never describe him as a D365 F&O consultant.** Tectura was functional training that earned MB-310; X++ and the thirteen extension modules are self-study; MB-500 is targeted for November 2026. The Copilot rollout was a real engagement. The role line is `Python Engineer · Cloud & DevOps · Dynamics 365 Integration`.
 
-**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. Phase 3 (effects) was merged to `main` on 2026-09-16 (PR #4). Phase 4 (heavy and custom effects) was merged to `main` on 2026-09-30 (PR #5), after he approved the badge design. **Phase 5a (repos, dossiers and downloads) was started on his go on 2026-10-01; its dossiers (3 to 6) were merged to `main` the same day (PR #6).** The worked extraction example and the three sanitised runbooks were merged on 2026-10-01 (PR #7). The two clean-room showcase repos were published and linked on 2026-10-01, on his say. **Phase 5a is complete.** **Phase 5b is cancelled** (see the cost rule below). After 5a comes launch (Phase 6), on his go.
+**Phase status:** Phases 0, 1 and 2 plus the positioning correction are merged to `main`. Phase 3 (effects) was merged to `main` on 2026-09-16 (PR #4). Phase 4 (heavy and custom effects) was merged to `main` on 2026-09-30 (PR #5), after he approved the badge design. **Phase 5a (repos, dossiers and downloads) was started on his go on 2026-10-01; its dossiers (3 to 6) were merged to `main` the same day (PR #6).** The worked extraction example and the three sanitised runbooks were merged on 2026-10-01 (PR #7). The two clean-room showcase repos were published and linked on 2026-10-01, on his say. **Phase 5a is complete.** **Phase 5b is cancelled** (see the cost rule below). **Phase 6 (launch) went live on 2026-10-12:** he moved the nameservers to Cloudflare himself, PR #10 attached the domain, and he added the `www` redirect and Always Use HTTPS in the dashboard. His launch decisions: analytics yes (Cloudflare Web Analytics, left on automatic injection for now); GitHub profile README yes (not yet published); email on the domain undecided, kept in the plan. What is left of the launch checklist is in PLAN.md section 10.1, and the agreed future tasks are in PLAN.md section 16 (summary under Future tasks below).
 
 **Cost rule (decided 2026-10-01): nothing that costs money to keep running.** Sanskar will not maintain a VPS, a paid AI API key or an F&O development VM for a portfolio. So: no `api/` service, no live demo, no contact form backend, no recorded walkthroughs, no status page. The site is fully static on Cloudflare's free plan, contact is an email link, and anything proposed later has to fit that. Do not suggest features that need a server, a key or a VM. LinkedIn, the MB-310 credential link and the MB-500 target are in. Sanskar deferred his proofread of the Phase 2 copy to later; expect corrections to arrive at any point. The contact address stays the resume one (`sanskarrai@hotmail.com`) until a mailbox exists on the domain.
 
@@ -34,9 +34,23 @@ node node_modules/vite/bin/vite.js preview --port 4173 --strictPort
 pnpm dlx lighthouse@latest http://localhost:4173/ --preset=desktop --chrome-flags="--headless=new"
 ```
 
-Last measured on the Phase 4 build, 2026-09-30, as the median of five mobile runs alternated with a same-day build of `main` (Phase 3): mobile performance 94 (range 91–95) against 94 (92–96), LCP 2.43s against 2.43s, TBT 109ms against 112ms, CLS 0 for both; accessibility and best practices 100; desktop 100 / 100 / 100 with LCP 0.62s over three runs. The lanyard chunk was requested in none of the runs. Initial JavaScript is about 105 KB gzipped (Phase 3: 95 KB); the sphere is a separate 9 KB chunk and the lanyard a 260 KB one plus the 139 KB model. **SEO scores 66 on purpose**, because the page carries a pre-launch `noindex` and `robots.txt` disallows everything; both are removed at launch. Lighthouse exits non-zero on Windows from a temp-directory cleanup error even when the run succeeded, so read the JSON rather than the exit code.
+Last measured on the Phase 4 build, 2026-09-30, as the median of five mobile runs alternated with a same-day build of `main` (Phase 3): mobile performance 94 (range 91–95) against 94 (92–96), LCP 2.43s against 2.43s, TBT 109ms against 112ms, CLS 0 for both; accessibility and best practices 100; desktop 100 / 100 / 100 with LCP 0.62s over three runs. The lanyard chunk was requested in none of the runs. Initial JavaScript is about 105 KB gzipped (Phase 3: 95 KB); the sphere is a separate 9 KB chunk and the lanyard a 260 KB one plus the 139 KB model. Lighthouse exits non-zero on Windows from a temp-directory cleanup error even when the run succeeded, so read the JSON rather than the exit code.
+
+**On production (2026-10-12):**
+- Results in both themes:
+  - SEO 100, accessibility 100 and best practices 100.
+  - Desktop 99.
+  - Mobile 83 to 88, with LCP about 3.2s.
+- **The mobile drop is Cloudflare's Web Analytics beacon, not the build.** The zone injects it into HTML for browsers. Alternated runs gave a median of 85 on `sansysasy.com` against 93 on `workers.dev`, which serves the same build without the beacon.
+- When comparing builds, compare on the same host. A local preview or `workers.dev` has no beacon.
+- **Headless Chrome on this machine follows the dark Windows theme**, so a plain Lighthouse run measures the dark site. Force the scheme with `--chrome-flags="--headless=new --blink-settings=preferredColorScheme=1"` (light) or `=0` (dark), and check the final screenshot in the JSON.
 
 **Verifying effects.** With the preview server running, `node scripts/verify-effects.mjs` drives headless Chrome and checks every effect: the hero's fit at rest and pressed, reveals, the sphere and a drag, count-ups, magnet lines, the heat map, the failover sequence step by step, the lanyard (not fetched before input, column height unchanged, comes to rest, drag, cursor restored), the particle heading (live, scatters, returns exactly home, stops), both calculators' arithmetic, dossier scroll isolation, in-page and deep links, the light theme, reduced motion and a touch phone, plus console errors, with screenshots saved to disk. Use it rather than the Browser pane for anything animated. It uses the GPU (`VERIFY_SWIFTSHADER=1` for the software renderer), counts WebGL draws and 2D fills from page start to prove loops stop at rest, gives every navigation and evaluation its own timeout, and on the overall guard (`VERIFY_TIMEOUT_MS`, default 8 minutes) writes a partial report naming the stage it stopped in. The CDP client is shared with `render-og.mjs` in `scripts/lib/cdp.mjs`. Against production on 2026-09-30, the deep-link check once reported `#contact` 2,201px down instead of 96px; the rerun and three isolated probes all landed at 96, so treat a single miss there as a slow-load flake and rerun before chasing it.
+
+Notes from the run against `https://sansysasy.com/` on 2026-10-12 (pass the base URL as the second argument):
+- **A one-off stall:** a run stopped once with a 30s `Runtime.evaluate` timeout in the failover stage, after the failover itself had passed. The rerun passed every stage.
+- **The verifier does not cover** the contact email link, the copy button or the resume PDFs. They were checked separately at launch.
+- **Its runs show up in Web Analytics.** Headless Chrome runs JavaScript, so "exclude bots" does not filter it out. It also leaves fake vitals: it keeps a page open for minutes and opens dossiers by script, which the browser does not count as input, so a late paragraph registered as an 89-second LCP.
 
 Two accessibility traps already hit and fixed: a `<dl>` may not contain `<p>` (use `<ul>` for figure grids), and a button's `aria-label` must contain its visible text or the accessible name mismatches.
 
@@ -94,7 +108,7 @@ Every effect is static under `prefers-reduced-motion`, and content must still re
 - **Content comes only from the two resumes and Sanskar's own statements.** Code samples are labelled as simplified or written for the page, with names generalised; they show patterns, not transcripts. "AgentF1n" (a Runtime Solutions project name on the resume) is left out as a possible client name; Sanskar confirmed on 2026-10-01 that the work stays in and the name stays out, and that GitHub is the right example host for SSH over 443 in the ERP dossier. The D365 dossier keeps the positioning rule: Tectura was functional training, X++ is self-study, the Copilot rollout was a real engagement.
 - New diagrams use `src/diagrams/FlowDiagram.tsx`: boxes, links, notes and dashed groups as data, in the same house style as the hand-drawn Phase 2 diagrams, with a full-sentence `aria-label`. Give a box an `id` when two share a title.
 - `CodeBlock` puts each margin note **under its line** whenever any line in the block is longer than 52 characters, because at the dossier's width a longer line beside a note needed its own sideways scrollbar.
-- The GitHub profile README is drafted at `docs/github-profile/README.md`; it is published to `TheSansySasy/TheSansySasy` at launch, not before.
+- The GitHub profile README is drafted at `docs/github-profile/README.md`. Sanskar said yes to publishing it; it goes to `TheSansySasy/TheSansySasy`, together with the profile's website field, on his go. Not yet published as of 2026-10-12.
 - **Worked extraction example** (`src/sims/ExtractionExample.tsx`, AI platform dossier): the free stand-in for the cancelled live demo. A made-up invoice, the JSON extracted from it, the checks, and the recorded cost, all fixed in the page; a second case misreads the total and is held for review. Its sample and its validation message match the `docflow-extract` repo, and its prices match the token calculator.
 
 ## Runbooks (Phase 5a)
@@ -109,7 +123,7 @@ Three PDF downloads, sanitised from documents Sanskar wrote and shared on 2026-1
 
 **Decided 2026-10-01:** the showcase repos are **clean-room reference implementations**, written from scratch with no EBT code, and Sanskar reviews each one before anything is made public. They live in `showcase/<repo>/`, which the portfolio's `.gitignore` excludes; each is its own git repo with the same no-reply identity. **Published 2026-10-01 on his say** ("its fine to publish", to skim later): `github.com/TheSansySasy/docflow-extract` and `github.com/TheSansySasy/azure-sql-ag-runbook`, both public, MIT, with topics and a homepage link to their dossier. They are linked from the AI platform and SQL dossiers through `src/content/data/repos.ts` and `src/ui/RepoCard.tsx`; the footer's GitHub profile link covers the rest. Work on them in `showcase/<repo>/` and push from there.
 
-**At launch:** their READMEs and GitHub homepage fields point at the `workers.dev` address, because `sansysasy.com` still shows a registrar parking page. Switch both to `sansysasy.com` when the domain goes live (it is on PLAN.md's launch checklist).
+**Switched at launch (2026-10-12):** both READMEs and both GitHub homepage fields now point at `sansysasy.com` (the dossier deep links `#work/ai-document-platform` and `#work/sql-always-on-azure`). CI stayed green on both.
 
 | Repo | State | Checks |
 |---|---|---|
@@ -178,16 +192,49 @@ Static-only **Cloudflare Worker** (not Pages: the dashboard no longer exposes Pa
 | Build variable | **`PNPM_VERSION=12.4.1`** — required; the build image ships pnpm 10.11.1, which cannot read a pnpm 12 lockfile |
 | Node version | from `.node-version` (`24`); build image default is already 24.18 |
 
-**Response headers** come from `public/_headers`, which Workers static assets read and do not serve: a year of immutable caching for the fingerprinted files under `/assets`, a day for runbooks, resumes and the Open Graph image, and `nosniff`, a referrer policy, `X-Frame-Options: DENY` and a permissions policy on everything. Before this, every file was served `max-age=0, must-revalidate`. There is no Content-Security-Policy yet: the theme script and the JSON-LD block are inline, so a policy needs hashes first. Vite's preview server ignores `_headers`; to check them locally run `pnpm exec wrangler dev --port 8788`, which needs no login, and stop its `workerd` processes afterwards.
+**Response headers** come from `public/_headers`, which Workers static assets read and do not serve: a year of immutable caching for the fingerprinted files under `/assets`, a day for runbooks, resumes and the Open Graph image, and `nosniff`, a referrer policy, `X-Frame-Options: DENY` and a permissions policy on everything. Before this, every file was served `max-age=0, must-revalidate`. There is no Content-Security-Policy yet: the theme script and the JSON-LD block are inline, so a policy needs hashes first, and it must also allow the injected Web Analytics beacon (`static.cloudflareinsights.com`, reporting to `/cdn-cgi/rum`). Vite's preview server ignores `_headers`; to check them locally run `pnpm exec wrangler dev --port 8788`, which needs no login, and stop its `workerd` processes afterwards.
 
-**DNS, decided 2026-09-13.** At Phase 6 the nameservers for sansysasy.com move to Cloudflare and the domain is attached to the Worker as a custom domain. **GoDaddy stays the registrar**: ownership, billing and renewal do not move, and this is not a domain transfer. Only which dashboard holds the DNS records changes. A Worker custom domain requires an active Cloudflare zone, so external DNS is not an option for the apex. No DNS change before Phase 6.
+**Domain and DNS (live 2026-10-12).**
+- **GoDaddy stays the registrar**: ownership, billing and renewal did not move, and this was not a domain transfer. Only which dashboard holds the DNS records changed.
+  - The nameservers point at Cloudflare's free zone: two `*.ns.cloudflare.com` servers, shown on the zone's overview.
+  - GoDaddy's own DNS page still lists its old records, including its `ns73`/`ns74` NS rows. Nothing reads them any more, so ignore that page.
+  - DNSSEC is off in both places.
+- **The apex** is the Worker's custom domain, declared in `wrangler.jsonc` (`routes`, `custom_domain: true`). Cloudflare created its DNS record and certificate on deploy. A Worker custom domain requires an active zone, which is why the nameservers had to move. `workers_dev` and `preview_urls` stay `true`, because declaring routes turns both off by default.
+- **`www`** is a proxied CNAME to the apex, plus a dashboard Redirect Rule:
+  - Hostname equals `www.sansysasy.com`.
+  - A dynamic 301 to `concat("https://sansysasy.com", http.request.uri.path)`, query string kept.
+
+  Without the rule `www` answers 522, because no Worker serves that hostname.
+- **Always Use HTTPS** is on (SSL/TLS, Edge Certificates). `http://` on either host ends at `https://sansysasy.com` in one 301.
+- **Other records** kept from GoDaddy's import:
+  - `_dmarc` TXT (`p=quarantine`). It protects the domain from spoofing even with no mailbox.
+  - `_domainconnect` CNAME (harmless).
+
+  No MX records.
+- **Web Analytics** came on with the zone, and Cloudflare injects `beacon.min.js` into HTML responses for browser user agents only. `curl` with its own user agent gets the clean file, so send a browser user agent to see what visitors get. Dashboard: Analytics & Logs, Web Analytics. Sanskar kept automatic injection for now (Future tasks below).
+- **Scanners arrive within minutes of a new certificate**, because certificates are published in public logs. On launch day they caused about 50 404s and two 405s from abroad. That is normal, and a static site has nothing for them to find.
+
+## Future tasks (agreed 2026-10-12)
+
+Full detail is in PLAN.md section 16. None is scheduled; each starts only on Sanskar's go, and all of them cost nothing to run.
+
+1. **Load the Web Analytics beacon after the page loads.** It costs about 8 mobile Lighthouse points as Cloudflare injects it. He chose to leave it for now.
+   - Steps: he switches Web Analytics from automatic injection to the manual snippet, then Claude adds the snippet, loaded after `load`, and re-measures against `workers.dev`.
+   - Never add the snippet while injection is still on: the beacon would load twice.
+2. **Email on the domain.** Undecided. The free route is Cloudflare Email Routing; it would change `SITE.email` and the Contact section.
+3. **Content-Security-Policy.** It needs hashes for the inline scripts and must allow the beacon.
+4. **Watch INP.** Launch day showed one 496 ms interaction on `body`, probably from the verifier. If real visitors show it, profile the first interaction, which also starts the lanyard's chunk.
+
+Also left from the launch checklist (PLAN.md 10.1):
+- Publish the GitHub profile README (Claude, on his go).
+- His own items: the LinkedIn Post Inspector check, adding the URL to LinkedIn and his resume PDFs, phone and iOS Safari QA, and, optionally, Search Console.
 
 ## Conventions
 
 - **Commits:** conventional prefixes (`feat:`, `fix:`, `chore:`, `docs:`), imperative subject, body explaining why. End with the co-author trailer for the model that wrote it.
 - **Git identity** is repo-local and uses the GitHub no-reply address, so no personal email lands in public history.
 - Line endings are normalized to LF by `.gitattributes`. `.claude/settings.local.json` is machine-specific and ignored.
-- `index.html` carries a **pre-launch `noindex`**. Removing it is the first item on the launch checklist.
+- The pre-launch `noindex` was removed at launch, and `robots.txt` now allows everything except `/styleguide`, which keeps its own `noindex` (meta tag and `X-Robots-Tag`).
 - **Content rules:** first person, specific over generic. Employers may be named. **No client names, no screenshots.** Numbers are limited to what the public resume already states.
 - **Design rules:** one signature animated effect per section; content must be excellent with every effect disabled; both light and dark themes are token-driven and must pass WCAG AA.
 - Vendored React Bits components keep a header comment with origin URL, licence and the date vendored, and are patched locally (pixel-ratio cap, pause when off-screen, theme tokens, `aria-hidden`).
